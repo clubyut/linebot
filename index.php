@@ -61,15 +61,8 @@ if (!is_null($events['events'])) {
 			$resp = '';
 		
 
-			$messagesX = array(2);
+			$messagesX = array(1);
 			$messages = [
-
-				'type' => 'text',
-
-				'text' => 'ชนิดข้อมูลที่ส่ง:'.$event['message']['type']
-
-			];
-			$messages2 = [
 						'type' => 'text',
 						'text' => 'เลือกรูป'
 						'quickReply' => [
@@ -86,7 +79,6 @@ if (!is_null($events['events'])) {
 					];
 
 			$messagesX[0] = $messages;
-            $messagesX[1] = $messages2;
 			_sendOut($access_token, $replyToken, $messagesX);
 	}
 
