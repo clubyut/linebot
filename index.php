@@ -84,7 +84,7 @@ if ($event['message']['type'] == 'image')  {
 
 				'type' => 'text',
 
-				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$results['result'] 
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$results['response']
 
 			];
 			$messagesX[0] = $messages;
