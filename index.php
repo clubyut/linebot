@@ -42,9 +42,6 @@ if (!is_null($events['events'])) {
 	$okreturn = 0;
 
 	foreach ($events['events'] as $event) {
-
-			if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
-
 			$return = '';
 
 			$replyToken = $event['replyToken'];
@@ -121,11 +118,6 @@ if (!is_null($events['events'])) {
 						$messagesX[3] = $messagesPictureReceiver;
 						$messagesX[4] = $messagesDelReq;
 						_sendOut($access_token, $replyToken, $messagesX);
-
-
-				
-			
-		}
 
 	}
 
