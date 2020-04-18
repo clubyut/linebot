@@ -38,20 +38,6 @@ $password = "xxxxxxxx";
 
 $dbx = "cp572795_KDC";
 
-$conn = new mysqli($servername, $username, $password, $dbx);
-
-mysqli_set_charset($conn, "utf8");
-
-//mysqli_set_charset($conn,"TIS620");
-
-mysql_query("SET NAMES utf8");
-
-
-
-$link = mysql_connect("xxxxxxx", "xxxxxxx", "xxxxxx");
-
-mysql_select_db("cp572795_KDC", $link);
-
 if (!is_null($events['events'])) 
 {
 	$okreturn = 0;
