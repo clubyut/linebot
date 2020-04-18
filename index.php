@@ -17,6 +17,7 @@
       $file = UPLOAD_DIR . uniqid() . '.png';
       $success = file_put_contents($file, $results['response']);
     }
+    echo "OK";
   }
 
   function getContent($datas)
