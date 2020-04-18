@@ -38,12 +38,10 @@ $password = "xxxxxxxx";
 
 $dbx = "cp572795_KDC";
 
-if (!is_null($events['events'])) 
-{
+if (!is_null($events['events'])) {
 	$okreturn = 0;
 
-	foreach ($events['events'] as $event) 
-	{
+	foreach ($events['events'] as $event) {
 
 			if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
 
@@ -65,37 +63,68 @@ if (!is_null($events['events']))
 
 			$resp = '';
 
+						$profile = 'yutclubprofile';
+						$img = 'yutclubimg';
 
 
-			if ($text == 'xxx') {
-				$resp = 'ถ่ายรูป 3 รูปเพื่อจบงาน3';
-			}
-			if (strtoupper(substr($text, 0, 2)) == 'DE') {
-		            $jtext = substr($text, 3);					
-					$messagesX = array(1);
-					
-					$resp = $row["Detail"] . " และทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
-					$messages = [
-						'type' => 'text',
-						'text' => $resp, //."   SELECT  * FROM `cp572795_KDC`.`WorkOrder` WHERE `ReceiverProfile` IS NULL and `WorkOrder` LIKE '" . $text . "%';", //. "DELETE FROM `cp572795_KDC`.`ReceiveActive` WHERE  `LineID`='" . $userX . "'; INSERT INTO `cp572795_KDC`.`ReceiveActive` (`LineID`, `WorkOrderActive`) VALUES ('" . $userX . "', '" . $text . "');",
-						'quickReply' => [
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'camera',
-										'label' => 'Camera'
+						$messagesX = array(5);
+
+						$messages = [
+							'type' => 'text',
+							'text' => 'งานเลขที่นี้รับแล้ว'
+						];
+
+						$messagesPicture = [
+							'type' => 'image',
+							'originalContentUrl' => 'https://linequery.com/' . $img,
+							'previewImageUrl' => 'https://linequery.com/' . $img
+						];
+
+
+						$json = substr($profile, 1);
+						$json = json_decode($json, true);
+						// echo $json['displayName'];
+						// echo $json['pictureUrl'];
+
+						$messagesProfileReceiver = [
+							'type' => 'text',
+							'text' => 'ผู้รับงาน:' . $json['displayName']
+						];
+
+
+						$messagesPictureReceiver = [
+							'type' => 'image',
+							'originalContentUrl' => $json['pictureUrl'],
+							'previewImageUrl' => $json['pictureUrl']
+						];
+
+						$messagesDelReq = [
+							'type' => 'text',
+							'text' => 'หากต้องการรับเอกสารใหม่ให้กดที่ ลบรูปถ่าย ',
+							'quickReply' => [
+								'items' => [
+									[
+										'type' => 'action',
+										'action' => [
+											'type' => 'message',
+											'label' => 'ลบรูปถ่าย',
+											'text' => 'DE:'.$text
+										]
 									]
 								]
 							]
-						]
-					];
+						];
 
-					$messagesX[0] = $messages;
-					_sendOut($access_token, $replyToken, $messagesX);
+						$messagesX[0] = $messages;
+						$messagesX[1] = $messagesPicture;
+						$messagesX[2] = $messagesProfileReceiver;
+						$messagesX[3] = $messagesPictureReceiver;
+						$messagesX[4] = $messagesDelReq;
+						_sendOut($access_token, $replyToken, $messagesX);
 
-				}
-			}
+
+				
+			
 		}
 
 	}
