@@ -59,66 +59,20 @@ if (!is_null($events['events'])) {
 			$messagesX = array(1);
 
 			$resp = '';
+		
 
-						$profile = 'yutclubprofile';
-						$img = 'yutclubimg';
+			$messagesX = array(1);
+			$messages = [
 
+				'type' => 'text',
 
-						$messagesX = array(5);
+				'text' => 'ขอต้อนรับเข้าสู่ระบบใหม่กรุณาพิมพ์ ? เพื่่อดูการสั่งค่า'
 
-						$messages = [
-							'type' => 'text',
-							'text' => 'งานเลขที่นี้รับแล้ว'
-						];
+			];
 
-						$messagesPicture = [
-							'type' => 'image',
-							'originalContentUrl' => 'https://linequery.com/' . $img,
-							'previewImageUrl' => 'https://linequery.com/' . $img
-						];
+			$messagesX[0] = $messages;
 
-
-						$json = substr($profile, 1);
-						$json = json_decode($json, true);
-						// echo $json['displayName'];
-						// echo $json['pictureUrl'];
-
-						$messagesProfileReceiver = [
-							'type' => 'text',
-							'text' => 'ผู้รับงาน:' . $json['displayName']
-						];
-
-
-						$messagesPictureReceiver = [
-							'type' => 'image',
-							'originalContentUrl' => $json['pictureUrl'],
-							'previewImageUrl' => $json['pictureUrl']
-						];
-
-						$messagesDelReq = [
-							'type' => 'text',
-							'text' => 'หากต้องการรับเอกสารใหม่ให้กดที่ ลบรูปถ่าย ',
-							'quickReply' => [
-								'items' => [
-									[
-										'type' => 'action',
-										'action' => [
-											'type' => 'message',
-											'label' => 'ลบรูปถ่าย',
-											'text' => 'DE:'.$text
-										]
-									]
-								]
-							]
-						];
-
-						$messagesX[0] = $messages;
-						$messagesX[1] = $messagesPicture;
-						$messagesX[2] = $messagesProfileReceiver;
-						$messagesX[3] = $messagesPictureReceiver;
-						$messagesX[4] = $messagesDelReq;
-						_sendOut($access_token, $replyToken, $messagesX);
-
+			_sendOut($access_token, $replyToken, $messagesX);
 	}
 
 }
