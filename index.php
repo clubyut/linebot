@@ -1,5 +1,5 @@
 <?php 
-  define('UPLOAD_DIR', 'tmp_image/');
+  define('UPLOAD_DIR', 'https://github.com/clubyut/linebot/tree/master/tmp_image/');
   /*Get Data From POST Http Request*/
   $datas = file_get_contents('php://input');
   /*Decode Json From LINE Data Body*/
