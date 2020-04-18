@@ -77,14 +77,13 @@ if ($event['message']['type'] == 'image')  {
 			if ($results['result'] == 'S') {
 				$file = UPLOAD_DIR . $uid . '.png';
 				$success = file_put_contents($file, $results['response']);
-			}
-
-		$messagesX = array(0);
+				$messagesX = array(0);
 				$messages = [
 
 				'type' => 'text',
 
-				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$results['response']
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file
+			}
 
 			];
 			$messagesX[0] = $messages;
