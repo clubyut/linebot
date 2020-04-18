@@ -45,6 +45,8 @@ if (!is_null($events['events']))
 	foreach ($events['events'] as $event) 
 	{
 
+			if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
+
 			$return = '';
 
 			$replyToken = $event['replyToken'];
@@ -64,19 +66,37 @@ if (!is_null($events['events']))
 			$resp = '';
 
 
-			$messages = [
 
-				'type' => 'text',
+			if ($text == 'xxx') {
+				$resp = 'ถ่ายรูป 3 รูปเพื่อจบงาน3';
+			}
+			if (strtoupper(substr($text, 0, 2)) == 'DE') {
+		            $jtext = substr($text, 3);					
+					$messagesX = array(1);
+					
+					$resp = $row["Detail"] . " และทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
+					$messages = [
+						'type' => 'text',
+						'text' => $resp, //."   SELECT  * FROM `cp572795_KDC`.`WorkOrder` WHERE `ReceiverProfile` IS NULL and `WorkOrder` LIKE '" . $text . "%';", //. "DELETE FROM `cp572795_KDC`.`ReceiveActive` WHERE  `LineID`='" . $userX . "'; INSERT INTO `cp572795_KDC`.`ReceiveActive` (`LineID`, `WorkOrderActive`) VALUES ('" . $userX . "', '" . $text . "');",
+						'quickReply' => [
+							'items' => [
+								[
+									'type' => 'action',
+									'action' => [
+										'type' => 'camera',
+										'label' => 'Camera'
+									]
+								]
+							]
+						]
+					];
 
-				'text' => json_encode($content)
+					$messagesX[0] = $messages;
+					_sendOut($access_token, $replyToken, $messagesX);
 
-			];
-
-			$messagesX[0] = $messages;
-
-
-
-			_sendOut($access_token, $replyToken, $messagesX);
+				}
+			}
+		}
 
 	}
 
