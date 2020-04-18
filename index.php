@@ -76,7 +76,8 @@ if ($event['message']['type'] == 'image')  {
 			$uid = uniqid();
 			if ($results['result'] == 'S') {
 				$file = UPLOAD_DIR . $uid . '.png';
-				$success = file_put_contents($file, $results['response']);
+				file_put_contents($file, $data);
+				//$success = file_put_contents($file, $results['response']);
 			}
 			$LINEDatasP['url'] = "https://api.line.me/v2/bot/profile/" . $userId;
 			$LINEDatasP['token'] = $access_token;
@@ -90,46 +91,6 @@ if ($event['message']['type'] == 'image')  {
 				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText
 
 			];
-
- $response = $bot->getMessageContent($idMessage);
-    if ($response->isSucceeded()) {
-        // คำสั่ง getRawBody() ในกรณีนี้ จะได้ข้อมูลส่งกลับมาเป็น binary 
-        // เราสามารถเอาข้อมูลไปบันทึกเป็นไฟล์ได้
-        $dataBinary = $response->getRawBody(); // return binary
-        // ดึงข้อมูลประเภทของไฟล์ จาก header
-        $fileType = $response->getHeader('Content-Type');    
-        switch ($fileType){
-            case (preg_match('/^image/',$fileType) ? true : false):
-                list($typeFile,$ext) = explode("/",$fileType);
-                $ext = ($ext=='jpeg' || $ext=='jpg')?"jpg":$ext;
-                $fileNameSave = time().".".$ext;
-                break;
-            case (preg_match('/^audio/',$fileType) ? true : false):
-                list($typeFile,$ext) = explode("/",$fileType);
-                $fileNameSave = time().".".$ext;                        
-                break;
-            case (preg_match('/^video/',$fileType) ? true : false):
-                list($typeFile,$ext) = explode("/",$fileType);
-                $fileNameSave = time().".".$ext;                                
-                break;                                                      
-        }
-        $botDataFolder = 'tmp_image/'; // โฟลเดอร์หลักที่จะบันทึกไฟล์
-        $botDataUserFolder = $botDataFolder.$userID; // มีโฟลเดอร์ด้านในเป็น userId อีกขั้น
-        if(!file_exists($botDataUserFolder)) { // ตรวจสอบถ้ายังไม่มีให้สร้างโฟลเดอร์ userId
-            mkdir($botDataUserFolder, 0777, true);
-        }   
-        // กำหนด path ของไฟล์ที่จะบันทึก
-        $fileFullSavePath = $botDataUserFolder.'/'.$fileNameSave;
-        file_put_contents($fileFullSavePath,$dataBinary); // ทำการบันทึกไฟล์
-        $textReplyMessage = "บันทึกไฟล์เรียบร้อยแล้ว $fileNameSave";
-        $replyData = new TextMessageBuilder($textReplyMessage);
-        break;
-    }
-    $failMessage = json_encode($idMessage.' '.$response->getHTTPStatus() . ' ' . $response->getRawBody());
-    $replyData = new TextMessageBuilder($failMessage); 
-
-
-
 			
 			$messagesX[0] = $messages;
 			_sendOut($access_token, $replyToken, $messagesX);
