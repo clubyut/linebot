@@ -103,6 +103,7 @@ if ($event['message']['type'] == 'image')  {
 				'text' => 'ชนิดข้อมูลที่ส่ง:'.$event['message']['type']
 
 			];
+			$resp = $row["Detail"] . " และทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
 			$messages = [
 						'type' => 'text',
 						'text' => $resp, //."   SELECT  * FROM `cp572795_KDC`.`WorkOrder` WHERE `ReceiverProfile` IS NULL and `WorkOrder` LIKE '" . $text . "%';", //. "DELETE FROM `cp572795_KDC`.`ReceiveActive` WHERE  `LineID`='" . $userX . "'; INSERT INTO `cp572795_KDC`.`ReceiveActive` (`LineID`, `WorkOrderActive`) VALUES ('" . $userX . "', '" . $text . "');",
