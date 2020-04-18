@@ -56,22 +56,37 @@ if (!is_null($events['events'])) {
 
 			$numrows = 0;
 
-			$messagesX = array(1);
+			//$messagesX = array();
 
 			$resp = '';
 		
 
-			$messagesX = array(1);
+			$messagesX = array(2);
 			$messages = [
 
 				'type' => 'text',
 
-				'text' => 'ขอต้อนรับเข้าสู่ระบบใหม่กรุณาพิมพ์ ? เพื่่อดูการสั่งค่า'.$event['message']['type']
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$event['message']['type']
 
 			];
+			$messages2 = [
+						'type' => 'text',
+						'text' => 'เลือกรูป'
+						'quickReply' => [
+							'items' => [
+								[
+									'type' => 'action',
+									'action' => [
+										'type' => 'camera',
+										'label' => 'Camera'
+									]
+								]
+							]
+						]
+					];
 
 			$messagesX[0] = $messages;
-
+            $messagesX[1] = $messages2;
 			_sendOut($access_token, $replyToken, $messagesX);
 	}
 
