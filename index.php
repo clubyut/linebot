@@ -1,453 +1,3 @@
-
-
-
-<?php
-
-/**
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-/**
- * The interface that represents HTTP client of LINE Messaging API.
- *
- * If you want to switch using HTTP client, please implement this.
- *
- * @package LINE\LINEBot
- */
-interface HTTPClient
-{
-    /**
-     * Sends GET request to LINE Messaging API.
-     *
-     * @param string $url Request URL.
-     * @param array $data URL parameters.
-     * @param array $headers
-     * @return Response Response of API request.
-     */
-    public function get($url, array $data = [], array $headers = []);
-
-    /**
-     * Sends POST request to LINE Messaging API.
-     *
-     * @param string $url Request URL.
-     * @param array $data Request body.
-     * @param array|null $headers Request headers.
-     * @return Response Response of API request.
-     */
-    public function post($url, array $data, array $headers = null);
-    
-    /**
-     * Sends DELETE request to LINE Messaging API.
-     *
-     * @param string $url Request URL.
-     * @return Response Response of API request.
-     */
-    public function delete($url);
-}
-?>
-<?php
-
-/**
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-namespace LINE\LINEBot;
-
-/**
- * A class represents API response.
- *
- * @package LINE\LINEBot
- */
-class Response
-{
-    /** @var int */
-    private $httpStatus;
-    /** @var string */
-    private $body;
-    /** @var string[] */
-    private $headers;
-
-    /**
-     * Response constructor.
-     *
-     * @param int $httpStatus HTTP status code of response.
-     * @param string $body Request body.
-     * @param string[] $headers
-     */
-    public function __construct($httpStatus, $body, $headers = [])
-    {
-        $this->httpStatus = $httpStatus;
-        $this->body = $body;
-        $this->headers = $headers;
-    }
-
-    /**
-     * Returns HTTP status code of response.
-     *
-     * @return int HTTP status code of response.
-     */
-    public function getHTTPStatus()
-    {
-        return $this->httpStatus;
-    }
-
-    /**
-     * Returns request is succeeded or not.
-     *
-     * @return bool Request is succeeded or not.
-     */
-    public function isSucceeded()
-    {
-        return $this->httpStatus === 200;
-    }
-
-    /**
-     * Returns raw response body.
-     *
-     * @return string Raw request body.
-     */
-    public function getRawBody()
-    {
-        return $this->body;
-    }
-
-    /**
-     * Returns response body as array (it means, returns JSON decoded body).
-     *
-     * @return array Request body that is JSON decoded.
-     */
-    public function getJSONDecodedBody()
-    {
-        return json_decode($this->body, true);
-    }
-
-    /**
-     * Returns the value of the specified response header.
-     *
-     * @param string $name A String specifying the header name.
-     * @return string|null A response header string, or null if the response does not have a header of that name.
-     */
-    public function getHeader($name)
-    {
-        if (isset($this->headers[$name])) {
-            return $this->headers[$name];
-        }
-        return null;
-    }
-
-    /**
-     * Returns all of response headers.
-     *
-     * @return string[] All of the response headers.
-     */
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-}
-?>
-<?php
-
-/**
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-use LINE\LINEBot\Constant\Meta;
-use LINE\LINEBot\Exception\CurlExecutionException;
-use LINE\LINEBot\HTTPClient;
-use LINE\LINEBot\Response;
-
-/**
- * Class CurlHTTPClient.
- *
- * A HTTPClient that uses cURL.
- *
- * @package LINE\LINEBot\HTTPClient
- */
-class CurlHTTPClient implements HTTPClient
-{
-    /** @var array */
-    private $authHeaders;
-    /** @var array */
-    private $userAgentHeader;
-
-    /**
-     * CurlHTTPClient constructor.
-     *
-     * @param string $channelToken Access token of your channel.
-     */
-    public function __construct($channelToken)
-    {
-        $this->authHeaders = [
-            "Authorization: Bearer $channelToken",
-        ];
-        $this->userAgentHeader = [
-            'User-Agent: LINE-BotSDK-PHP/' . Meta::VERSION,
-        ];
-    }
-
-    /**
-     * Sends GET request to LINE Messaging API.
-     *
-     * @param string $url Request URL.
-     * @param array $data Request body
-     * @param array $headers Request headers.
-     * @return Response Response of API request.
-     * @throws CurlExecutionException
-     */
-    public function get($url, array $data = [], array $headers = [])
-    {
-        if ($data) {
-            $url .= '?' . http_build_query($data);
-        }
-        return $this->sendRequest('GET', $url, $headers);
-    }
-
-    /**
-     * Sends POST request to LINE Messaging API.
-     *
-     * @param string $url Request URL.
-     * @param array $data Request body or resource path.
-     * @param array|null $headers Request headers.
-     * @return Response Response of API request.
-     * @throws CurlExecutionException
-     */
-    public function post($url, array $data, array $headers = null)
-    {
-        $headers = is_null($headers) ? ['Content-Type: application/json; charset=utf-8'] : $headers;
-        return $this->sendRequest('POST', $url, $headers, $data);
-    }
-
-    /**
-     * Sends DELETE request to LINE Messaging API.
-     *
-     * @param string $url Request URL.
-     * @return Response Response of API request.
-     * @throws CurlExecutionException
-     */
-    public function delete($url)
-    {
-        return $this->sendRequest('DELETE', $url, [], []);
-    }
-
-    /**
-     * @param string $method
-     * @param array $headers
-     * @param string|null $reqBody
-     * @return array cUrl options
-     */
-    private function getOptions($method, $headers, $reqBody)
-    {
-        $options = [
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_BINARYTRANSFER => true,
-            CURLOPT_HEADER => true,
-        ];
-        if ($method === 'POST') {
-            if (is_null($reqBody)) {
-                // Rel: https://github.com/line/line-bot-sdk-php/issues/35
-                $options[CURLOPT_HTTPHEADER][] = 'Content-Length: 0';
-            } else {
-                if (isset($reqBody['__file']) && isset($reqBody['__type'])) {
-                    $options[CURLOPT_PUT] = true;
-                    $options[CURLOPT_INFILE] = fopen($reqBody['__file'], 'r');
-                    $options[CURLOPT_INFILESIZE] = filesize($reqBody['__file']);
-                } elseif (in_array('Content-Type: application/x-www-form-urlencoded', $headers)) {
-                    $options[CURLOPT_POST] = true;
-                    $options[CURLOPT_POSTFIELDS] = http_build_query($reqBody);
-                } elseif (!empty($reqBody)) {
-                    $options[CURLOPT_POST] = true;
-                    $options[CURLOPT_POSTFIELDS] = json_encode($reqBody);
-                } else {
-                    $options[CURLOPT_POST] = true;
-                    $options[CURLOPT_POSTFIELDS] = $reqBody;
-                }
-            }
-        }
-        return $options;
-    }
-
-    /**
-     * @param string $method
-     * @param string $url
-     * @param array $additionalHeader
-     * @param string|null $reqBody
-     * @return Response
-     * @throws CurlExecutionException
-     */
-    private function sendRequest($method, $url, array $additionalHeader, $reqBody = null)
-    {
-        $curl = new Curl($url);
-
-        $headers = array_merge($this->authHeaders, $this->userAgentHeader, $additionalHeader);
-
-        $options = $this->getOptions($method, $headers, $reqBody);
-        $curl->setoptArray($options);
-
-        $result = $curl->exec();
-
-        if ($curl->errno()) {
-            throw new CurlExecutionException($curl->error());
-        }
-
-        $info = $curl->getinfo();
-        $httpStatus = $info['http_code'];
-
-        $responseHeaderSize = $info['header_size'];
-
-        $responseHeaderStr = substr($result, 0, $responseHeaderSize);
-        $responseHeaders = [];
-        foreach (explode("\r\n", $responseHeaderStr) as $responseHeader) {
-            $kv = explode(':', $responseHeader, 2);
-            if (count($kv) === 2) {
-                $responseHeaders[$kv[0]] = trim($kv[1]);
-            }
-        }
-
-        $body = substr($result, $responseHeaderSize);
-
-        if (isset($options[CURLOPT_INFILE])) {
-            fclose($options[CURLOPT_INFILE]);
-        }
-
-        return new Response($httpStatus, $body, $responseHeaders);
-    }
-}
-?>
-<?php
-
-/**
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-
-/**
- * cURL session manager
- *
- * @package LINE\LINEBot\HTTPClient
- */
-class Curl
-{
-    /** @var resource */
-    private $ch;
-
-    /**
-     * Initialize a cURL session
-     *
-     * @param string $url
-     */
-    public function __construct($url)
-    {
-        $this->ch = curl_init($url);
-    }
-
-    /**
-     * Set multiple options for a cURL transfer
-     *
-     * @param array $options Returns TRUE if all options were successfully set. If an option could not be
-     * successfully set, FALSE is immediately returned, ignoring any future options in the options array.
-     * @return bool
-     */
-    public function setoptArray(array $options)
-    {
-        return curl_setopt_array($this->ch, $options);
-    }
-
-    /**
-     * Perform a cURL session
-     *
-     * @return bool Returns TRUE on success or FALSE on failure. However, if the CURLOPT_RETURNTRANSFER
-     * option is set, it will return the result on success, FALSE on failure.
-     */
-    public function exec()
-    {
-        return curl_exec($this->ch);
-    }
-
-    /**
-     * Gets information about the last transfer.
-     *
-     * @return array
-     */
-    public function getinfo()
-    {
-        return curl_getinfo($this->ch);
-    }
-
-    /**
-     * @return int Returns the error number or 0 (zero) if no error occurred.
-     */
-    public function errno()
-    {
-        return curl_errno($this->ch);
-    }
-
-    /**
-     * @return string Returns the error message or '' (the empty string) if no error occurred.
-     */
-    public function error()
-    {
-        return curl_error($this->ch);
-    }
-
-    /**
-     * Closes a cURL session and frees all resources. The cURL handle, ch, is also deleted.
-     */
-    public function __destruct()
-    {
-        curl_close($this->ch);
-    }
-}
-?>
 <?php
 // กรณีต้องการตรวจสอบการแจ้ง error ให้เปิด 3 บรรทัดล่างนี้ให้ทำงาน กรณีไม่ ให้ comment ปิดไป
 ini_set('display_errors', 1);
@@ -644,8 +194,289 @@ if ($response->isSucceeded()) {
 }
  
 // Failed
-echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+//echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+echo '5555';
+?>
+<?php
 
-echo 'Succeeded!';
+/**
+ * Copyright 2016 LINE Corporation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+namespace LINE\LINEBot\HTTPClient;
+
+use LINE\LINEBot\Constant\Meta;
+use LINE\LINEBot\Exception\CurlExecutionException;
+use LINE\LINEBot\HTTPClient;
+use LINE\LINEBot\Response;
+
+/**
+ * Class CurlHTTPClient.
+ *
+ * A HTTPClient that uses cURL.
+ *
+ * @package LINE\LINEBot\HTTPClient
+ */
+class CurlHTTPClient implements HTTPClient
+{
+    /** @var array */
+    private $authHeaders;
+    /** @var array */
+    private $userAgentHeader;
+
+    /**
+     * CurlHTTPClient constructor.
+     *
+     * @param string $channelToken Access token of your channel.
+     */
+    public function __construct($channelToken)
+    {
+        $this->authHeaders = [
+            "Authorization: Bearer $channelToken",
+        ];
+        $this->userAgentHeader = [
+            'User-Agent: LINE-BotSDK-PHP/' . Meta::VERSION,
+        ];
+    }
+
+    /**
+     * Sends GET request to LINE Messaging API.
+     *
+     * @param string $url Request URL.
+     * @param array $data Request body
+     * @param array $headers Request headers.
+     * @return Response Response of API request.
+     * @throws CurlExecutionException
+     */
+    public function get($url, array $data = [], array $headers = [])
+    {
+        if ($data) {
+            $url .= '?' . http_build_query($data);
+        }
+        return $this->sendRequest('GET', $url, $headers);
+    }
+
+    /**
+     * Sends POST request to LINE Messaging API.
+     *
+     * @param string $url Request URL.
+     * @param array $data Request body or resource path.
+     * @param array|null $headers Request headers.
+     * @return Response Response of API request.
+     * @throws CurlExecutionException
+     */
+    public function post($url, array $data, array $headers = null)
+    {
+        $headers = is_null($headers) ? ['Content-Type: application/json; charset=utf-8'] : $headers;
+        return $this->sendRequest('POST', $url, $headers, $data);
+    }
+
+    /**
+     * Sends DELETE request to LINE Messaging API.
+     *
+     * @param string $url Request URL.
+     * @return Response Response of API request.
+     * @throws CurlExecutionException
+     */
+    public function delete($url)
+    {
+        return $this->sendRequest('DELETE', $url, [], []);
+    }
+
+    /**
+     * @param string $method
+     * @param array $headers
+     * @param string|null $reqBody
+     * @return array cUrl options
+     */
+    private function getOptions($method, $headers, $reqBody)
+    {
+        $options = [
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_BINARYTRANSFER => true,
+            CURLOPT_HEADER => true,
+        ];
+        if ($method === 'POST') {
+            if (is_null($reqBody)) {
+                // Rel: https://github.com/line/line-bot-sdk-php/issues/35
+                $options[CURLOPT_HTTPHEADER][] = 'Content-Length: 0';
+            } else {
+                if (isset($reqBody['__file']) && isset($reqBody['__type'])) {
+                    $options[CURLOPT_PUT] = true;
+                    $options[CURLOPT_INFILE] = fopen($reqBody['__file'], 'r');
+                    $options[CURLOPT_INFILESIZE] = filesize($reqBody['__file']);
+                } elseif (in_array('Content-Type: application/x-www-form-urlencoded', $headers)) {
+                    $options[CURLOPT_POST] = true;
+                    $options[CURLOPT_POSTFIELDS] = http_build_query($reqBody);
+                } elseif (!empty($reqBody)) {
+                    $options[CURLOPT_POST] = true;
+                    $options[CURLOPT_POSTFIELDS] = json_encode($reqBody);
+                } else {
+                    $options[CURLOPT_POST] = true;
+                    $options[CURLOPT_POSTFIELDS] = $reqBody;
+                }
+            }
+        }
+        return $options;
+    }
+
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $additionalHeader
+     * @param string|null $reqBody
+     * @return Response
+     * @throws CurlExecutionException
+     */
+    private function sendRequest($method, $url, array $additionalHeader, $reqBody = null)
+    {
+        $curl = new Curl($url);
+
+        $headers = array_merge($this->authHeaders, $this->userAgentHeader, $additionalHeader);
+
+        $options = $this->getOptions($method, $headers, $reqBody);
+        $curl->setoptArray($options);
+
+        $result = $curl->exec();
+
+        if ($curl->errno()) {
+            throw new CurlExecutionException($curl->error());
+        }
+
+        $info = $curl->getinfo();
+        $httpStatus = $info['http_code'];
+
+        $responseHeaderSize = $info['header_size'];
+
+        $responseHeaderStr = substr($result, 0, $responseHeaderSize);
+        $responseHeaders = [];
+        foreach (explode("\r\n", $responseHeaderStr) as $responseHeader) {
+            $kv = explode(':', $responseHeader, 2);
+            if (count($kv) === 2) {
+                $responseHeaders[$kv[0]] = trim($kv[1]);
+            }
+        }
+
+        $body = substr($result, $responseHeaderSize);
+
+        if (isset($options[CURLOPT_INFILE])) {
+            fclose($options[CURLOPT_INFILE]);
+        }
+
+        return new Response($httpStatus, $body, $responseHeaders);
+    }
+}
+?>
+<?php
+
+/**
+ * Copyright 2016 LINE Corporation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+namespace LINE\LINEBot\HTTPClient;
+
+/**
+ * cURL session manager
+ *
+ * @package LINE\LINEBot\HTTPClient
+ */
+class Curl
+{
+    /** @var resource */
+    private $ch;
+
+    /**
+     * Initialize a cURL session
+     *
+     * @param string $url
+     */
+    public function __construct($url)
+    {
+        $this->ch = curl_init($url);
+    }
+
+    /**
+     * Set multiple options for a cURL transfer
+     *
+     * @param array $options Returns TRUE if all options were successfully set. If an option could not be
+     * successfully set, FALSE is immediately returned, ignoring any future options in the options array.
+     * @return bool
+     */
+    public function setoptArray(array $options)
+    {
+        return curl_setopt_array($this->ch, $options);
+    }
+
+    /**
+     * Perform a cURL session
+     *
+     * @return bool Returns TRUE on success or FALSE on failure. However, if the CURLOPT_RETURNTRANSFER
+     * option is set, it will return the result on success, FALSE on failure.
+     */
+    public function exec()
+    {
+        return curl_exec($this->ch);
+    }
+
+    /**
+     * Gets information about the last transfer.
+     *
+     * @return array
+     */
+    public function getinfo()
+    {
+        return curl_getinfo($this->ch);
+    }
+
+    /**
+     * @return int Returns the error number or 0 (zero) if no error occurred.
+     */
+    public function errno()
+    {
+        return curl_errno($this->ch);
+    }
+
+    /**
+     * @return string Returns the error message or '' (the empty string) if no error occurred.
+     */
+    public function error()
+    {
+        return curl_error($this->ch);
+    }
+
+    /**
+     * Closes a cURL session and frees all resources. The cURL handle, ch, is also deleted.
+     */
+    public function __destruct()
+    {
+        curl_close($this->ch);
+    }
+}
 ?>
 
