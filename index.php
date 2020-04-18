@@ -56,30 +56,42 @@ if (!is_null($events['events'])) {
 
 			$numrows = 0;
 
-			$messagesX = array();
+			//$messagesX = array();
 
 			$resp = '';
 		
 
-			$messagesX = array(1);
-			$messages = [
-						'type' => 'text',
-						'text' => 'เลือกรูป'
-						'quickReply' => [
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'camera',
-										'label' => 'Camera'
-									]
-								]
-							]
-						]
-					];
 
+
+if ($event['message']['type'] == 'image')  {
+
+			$replyToken = $event['replyToken'];
+			$userId = $event['source']['userId'];
+			$userX = $event['source']['userId'];
+			$id = $event['message']['id'];
+			$text = $event['message']['text'];
+
+			$LINEDatas['messageId'] = $deCode['events'][0]['message']['id'];
+			$results = getContent($LINEDatas);
+			$uid = uniqid();
+			if ($results['result'] == 'S') {
+				$file = UPLOAD_DIR . $uid . '.png';
+				$success = file_put_contents($file, $results['response']);
+			}
+			}else
+			{
+				$messagesX = array(0);
+				$messages = [
+
+				'type' => 'text',
+
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$event['message']['type']
+
+			];
 			$messagesX[0] = $messages;
 			_sendOut($access_token, $replyToken, $messagesX);
+			}
+			
 	}
 
 }
