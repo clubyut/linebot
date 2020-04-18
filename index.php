@@ -56,7 +56,7 @@ if (!is_null($events['events'])) {
 
 			$numrows = 0;
 
-			//$messagesX = array();
+			$messagesX = array();
 
 			$resp = '';
 		
