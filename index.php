@@ -77,17 +77,22 @@ if ($event['message']['type'] == 'image')  {
 			if ($results['result'] == 'S') {
 				$file = UPLOAD_DIR . $uid . '.png';
 				$success = file_put_contents($file, $results['response']);
+			}
+			$LINEDatasP['url'] = "https://api.line.me/v2/bot/profile/" . $userId;
+			$LINEDatasP['token'] = $access_token;
+			$profile = getLINEProfile($LINEDatasP);
+			$profileText = implode("", $profile);
 				$messagesX = array(0);
 				$messages = [
 
 				'type' => 'text',
 
-				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText
 
 			];
 			$messagesX[0] = $messages;
 			_sendOut($access_token, $replyToken, $messagesX);
-			}
+
 			}else
 			{
 				$messagesX = array(0);
