@@ -83,11 +83,11 @@ if ($event['message']['type'] == 'image')  {
 				'type' => 'text',
 
 				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file
-			}
 
 			];
 			$messagesX[0] = $messages;
 			_sendOut($access_token, $replyToken, $messagesX);
+			}
 			}else
 			{
 				$messagesX = array(0);
