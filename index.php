@@ -76,8 +76,7 @@ if ($event['message']['type'] == 'image')  {
 			$uid = uniqid();
 			if ($results['result'] == 'S') {
 				$file = UPLOAD_DIR . $uid . '.png';
-				file_put_contents($file, $data);
-				//$success = file_put_contents($file, $results['response']);
+				$success = file_put_contents($file, $results['response']);
 			}
 
 
@@ -90,18 +89,9 @@ if ($event['message']['type'] == 'image')  {
 
 				'type' => 'text',
 
-				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText.$results['response']
 
 			];
-
-
-			$response = $bot->getMessageContent($event['message']['id']);
-			if ($response->isSucceeded()) {
-					$dataBinary = $response->getRawBody();
-						//chdir('admins');
-					$fileFullSavePath = 'ชื่อรูปภาพ.jpg';
-					file_put_contents($fileFullSavePath,$dataBinary);
-				}
 			
 			$messagesX[0] = $messages;
 			_sendOut($access_token, $replyToken, $messagesX);
