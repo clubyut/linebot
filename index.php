@@ -80,6 +80,22 @@ if ($event['message']['type'] == 'image')  {
 			}
 
 
+final LineMessagingClient client = LineMessagingClient
+        .builder($ACCESS_TOKEN)
+        .build();
+
+final MessageContentResponse messageContentResponse;
+try {
+    messageContentResponse = client.getMessageContent("<messageId>").get();
+} catch (InterruptedException | ExecutionException e) {
+    e.printStackTrace();
+    return;
+}
+Files.copy(messageContentResponse.getStream(),
+           Files.createTempFile("foo", "bar"));
+
+
+
 			$LINEDatasP['url'] = "https://api.line.me/v2/bot/profile/" . $userId;
 			$LINEDatasP['token'] = $access_token;
 			$profile = getLINEProfile($LINEDatasP);
