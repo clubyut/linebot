@@ -79,6 +79,8 @@ if ($event['message']['type'] == 'image')  {
 				file_put_contents($file, $data);
 				//$success = file_put_contents($file, $results['response']);
 			}
+
+
 			$LINEDatasP['url'] = "https://api.line.me/v2/bot/profile/" . $userId;
 			$LINEDatasP['token'] = $access_token;
 			$profile = getLINEProfile($LINEDatasP);
@@ -91,6 +93,15 @@ if ($event['message']['type'] == 'image')  {
 				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText
 
 			];
+
+
+			$response = $bot->getMessageContent($event['message']['id']);
+			if ($response->isSucceeded()) {
+					$dataBinary = $response->getRawBody();
+						//chdir('admins');
+					$fileFullSavePath = 'ชื่อรูปภาพ.jpg';
+					file_put_contents($fileFullSavePath,$dataBinary);
+				}
 			
 			$messagesX[0] = $messages;
 			_sendOut($access_token, $replyToken, $messagesX);
