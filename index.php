@@ -89,7 +89,7 @@ if ($event['message']['type'] == 'image')  {
 
 				'type' => 'text',
 
-				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText.$results['response']
+				'text' => 'ชนิดข้อมูลที่ส่ง:'.$file.$profileText
 
 			];
 			
