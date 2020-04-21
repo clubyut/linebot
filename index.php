@@ -1,4 +1,5 @@
 <?php
+//mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
   $LINEData = file_get_contents('php://input');
   $jsonData = json_decode($LINEData,true);
 
@@ -7,9 +8,9 @@
   $text = $jsonData["events"][0]["message"]["text"];
   $timestamp = $jsonData["events"][0]["timestamp"];
 
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
+  $servername = "us-cdbr-iron-east-01.cleardb.net";
+  $username = "b79cc14ad249eb";
+  $password = "76b0ba67";
   $dbname = "LINE";
   $mysql = new mysqli($servername, $username, $password, $dbname);
   mysqli_set_charset($mysql, "utf8");
