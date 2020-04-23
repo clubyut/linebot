@@ -88,7 +88,7 @@ $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait
   if ( $getNum == "0"){
       $qNo=1;
   } else {
-    while($row = $getUser->fetch_assoc()){
+    while($row = $getQno->fetch_assoc()){
       $qNo = $row['q_no'];
     }
     $qNo =$qNo +1;
