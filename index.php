@@ -11,7 +11,6 @@ $access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+
   $timestamp = $jsonData["events"][0]["timestamp"]; //$results['response']
   $mID = $jsonData["events"][0]["message"]["id"];
   $mType =$jsonData["events"][0]["message"]["type"];
-  $image=null;
   if ($mType == 'image')  {
             $LINEDatas['messageId'] =$mID;
 			$results = getContent($LINEDatas);
