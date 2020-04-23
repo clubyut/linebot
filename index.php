@@ -11,6 +11,9 @@ $access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+
   $timestamp = $jsonData["events"][0]["timestamp"]; //$results['response']
   $mID = $jsonData["events"][0]["message"]["id"];
   $mType =$jsonData["events"][0]["message"]["type"];
+  $branchNo=1;
+  $qNo=1;
+  $qStatus="wait";
   $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
@@ -80,7 +83,7 @@ if($text== 'ADD_Q')
 
 }else{
   //select Max AddQ
-  $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+  $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
 
   }
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
