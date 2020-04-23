@@ -12,7 +12,10 @@ $access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+
   $mID = $jsonData["events"][0]["message"]["id"];
   $mType =$jsonData["events"][0]["message"]["type"];
 
-   
+     if ($mType == 'image')  {
+            $text="Image";
+		}
+
 
   $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
