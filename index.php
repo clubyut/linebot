@@ -11,7 +11,7 @@
   $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
-  $dbname = "LINE";
+  $dbname = "heroku_9899d38b5c56894";
   $mysql = new mysqli($servername, $username, $password, $dbname);
   mysqli_set_charset($mysql, "utf8");
 
