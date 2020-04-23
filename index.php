@@ -78,12 +78,13 @@ $replyText["type"] = "text";
 if($text== 'ADD_Q')
 {
 	
-   $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`log`");
+   $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
    $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
 
 }else{
   //select Max AddQ
-  $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
+	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
 
   }
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
