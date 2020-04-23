@@ -78,14 +78,25 @@ $replyText["type"] = "text";
 if($text== 'ADD_Q')
 {
 	
-   $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
+   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
    $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
 
 }else{
   //select Max AddQ
+$getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait'");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo=1;
+  } else {
+    while($row = $getUser->fetch_assoc()){
+      $qNo = $row['q_no'];
+    }
+    $qNo =$qNo +1;
+  }
+
 	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
     $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
-
+     $replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
   }
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";
