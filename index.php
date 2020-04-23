@@ -11,12 +11,6 @@ $access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+
   $timestamp = $jsonData["events"][0]["timestamp"]; //$results['response']
   $mID = $jsonData["events"][0]["message"]["id"];
   $mType =$jsonData["events"][0]["message"]["type"];
-
-     if ($mType == 'image')  {
-            $text="Image";
-		}
-
-
   $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
@@ -76,23 +70,19 @@ $access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+
 
 	return $datasReturn;
 }
+ //ADD_Q
+$replyText["type"] = "text";
+if($text== 'ADD_Q')
+{
+	
+   $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`log`");
+   $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
 
+}else{
+  //select Max AddQ
   $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
 
-  $getUser = $mysql->query("SELECT * FROM `Customer` WHERE `UserID`='$userID'");
-  $getuserNum = $getUser->num_rows;
-  $replyText["type"] = "text";
-  if ($getuserNum == "0"){
-    $replyText["text"] = "สวัสดีคับบบบ";
-  } else {
-    while($row = $getUser->fetch_assoc()){
-      $Name = $row['Name'];
-      $Surname = $row['Surname'];
-      $CustomerID = $row['CustomerID'];
-    }
-    $replyText["text"] = "สวัสดีคุณ $Name $Surname (#$CustomerID)";
   }
-
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";
 
