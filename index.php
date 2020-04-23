@@ -1,12 +1,24 @@
 <?php
 //mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
+$access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=';
   $LINEData = file_get_contents('php://input');
+  $LINEDatas['token'] = $access_token;
   $jsonData = json_decode($LINEData,true);
 
   $replyToken = $jsonData["events"][0]["replyToken"];
   $userID = $jsonData["events"][0]["source"]["userId"];
   $text = $jsonData["events"][0]["message"]["text"];
-  $timestamp = $jsonData["events"][0]["timestamp"];
+  $timestamp = $jsonData["events"][0]["timestamp"]; //$results['response']
+  $mID = $jsonData["events"][0]["message"]["id"];
+  $mType =$jsonData["events"][0]["message"]["type"];
+  $image=null;
+  if ($mType == 'image')  {
+            $LINEDatas['messageId'] =$mID;
+			$results = getContent($LINEDatas);
+				$image =  $results['response'];
+			}
+		}
+   
 
   $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
@@ -34,8 +46,41 @@
           curl_close($ch);
     return $result;
   }
+  function getContent($datas)
+{
+	$datasReturn = [];
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+		CURLOPT_URL => "https://api.line.me/v2/bot/message/" . $datas['messageId'] . "/content",
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING => "",
+		CURLOPT_MAXREDIRS => 10,
+		CURLOPT_TIMEOUT => 30,
+		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST => "GET",
+		CURLOPT_POSTFIELDS => "",
+		CURLOPT_HTTPHEADER => array(
+			"Authorization: Bearer " . $datas['token'],
+			"cache-control: no-cache"
+		),
+	));
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+	curl_close($curl);
 
-  $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`) VALUES ('$userID','$text','$timestamp')");
+	if ($err) {
+		$datasReturn['result'] = 'E';
+		$datasReturn['message'] = $err;
+	} else {
+		$datasReturn['result'] = 'S';
+		$datasReturn['message'] = 'Success';
+		$datasReturn['response'] = $response;
+	}
+
+	return $datasReturn;
+}
+
+  $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
 
   $getUser = $mysql->query("SELECT * FROM `Customer` WHERE `UserID`='$userID'");
   $getuserNum = $getUser->num_rows;
