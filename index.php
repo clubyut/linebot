@@ -81,6 +81,13 @@ if($text== 'ADD_Q')
    //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
    $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
 
+}elseif ($text== 'CLEAR_Q') {
+	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
+	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
+}elseif ($text== 'NEXT_Q') {
+	$replyText["text"] = "คิวถัดไปคือ";
+}elseif ($text== 'CURRENT_Q') {
+	$replyText["text"] = "หมายเลขคิวปัจุบัน";
 }else{
   //select Max AddQ
 $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait'");
@@ -93,7 +100,6 @@ $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait
     }
     $qNo =$qNo +1;
   }
-
 	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
     $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
      $replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
