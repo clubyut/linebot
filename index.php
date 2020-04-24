@@ -226,13 +226,13 @@ $jsonFlex = [
             "contents" => [
               [
                 "type" => "text",
-                "text" => "Merchant",
+                "text" => "พื้นที่โฆษณา",
                 "align" => "start",
                 "color" => "#C3C3C3"
               ],
               [
                 "type" => "text",
-                "text" => "BTS 01",
+                "text" => "TEST",
                 "align" => "end",
                 "color" => "#000000"
               ]
@@ -245,12 +245,12 @@ $jsonFlex = [
             "contents" => [
               [
                 "type" => "text",
-                "text" => "New balance",
+                "text" => "พื้นที่โฆษณา",
                 "color" => "#C3C3C3"
               ],
               [
                 "type" => "text",
-                "text" => "฿ 45.57",
+                "text" => "TEST",
                 "align" => "end"
               ]
             ]
@@ -268,7 +268,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "View Details",
+            "text" => "พื้นที่โฆษณา",
             "size" => "lg",
             "align" => "start",
             "color" => "#0084B6",
