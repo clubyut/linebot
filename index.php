@@ -144,7 +144,21 @@ if($text== 'ADD_Q')
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
 	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
-	$replyText["text"] = "คิวถัดไปคือ";
+	
+	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+	//UPDATE STATUS Q
+	$getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait'");
+    $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo="No Q";
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['qNO'];
+    }
+  }
+$mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete'  WHERE q_no='$qNo'");
+$replyText["text"] = "คิวถัดไปคือ $qNo";
+
 }elseif ($text== 'CURRENT_Q') {
 	$replyText["text"] = "หมายเลขคิวปัจุบัน";
 
@@ -182,7 +196,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "หมายเลขคิว",
+            "text" => "หมายเลขคิวปัจจุบัน",
             "size" => "lg",
             "align" => "start",
             "weight" => "bold",
