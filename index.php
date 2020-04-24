@@ -184,7 +184,7 @@ $jsonFlex = [
           ],
           [
             "type" => "text",
-            "text" => "        6",
+            "text" => "   ".$text,
             "size" => "4xl",
             "weight" => "bold",
             "color" => "#000000"
@@ -268,7 +268,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "พื้นที่โฆษณา",
+            "text" => "ลิ้งพื้นที่โฆษณา",
             "size" => "lg",
             "align" => "start",
             "color" => "#0084B6",
@@ -311,20 +311,9 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 }else{
   //select Max AddQ
-$getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait'");
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait'");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo=1;
