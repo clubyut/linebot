@@ -176,35 +176,35 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "Purchase",
-            "size" => "lg",
+            "text" => "หมายเลขคิว",
+            "size" => "2g",
             "align" => "start",
             "weight" => "bold",
             "color" => "#009813"
           ],
           [
             "type" => "text",
-            "text" => "฿ 100.00",
-            "size" => "3xl",
+            "text" => "   6   ",
+            "size" => "5xl",
             "weight" => "bold",
             "color" => "#000000"
           ],
           [
             "type" => "text",
-            "text" => "Rabbit Line Pay",
+            "text" => "พท.โฆษณา",
             "size" => "lg",
             "weight" => "bold",
             "color" => "#000000"
           ],
           [
             "type" => "text",
-            "text" => "2019.02.14 21:47 (GMT+0700)",
+            "text" => "พท.โฆษณา",
             "size" => "xs",
             "color" => "#B2B2B2"
           ],
           [
             "type" => "text",
-            "text" => "Payment complete.",
+            "text" => "พท.โฆษณา",
             "margin" => "lg",
             "size" => "lg",
             "color" => "#000000"
@@ -226,13 +226,13 @@ $jsonFlex = [
             "contents" => [
               [
                 "type" => "text",
-                "text" => "Merchant",
+                "text" => "พท.โฆษณา",
                 "align" => "start",
                 "color" => "#C3C3C3"
               ],
               [
                 "type" => "text",
-                "text" => "BTS 01",
+                "text" => "พท.โฆษณา",
                 "align" => "end",
                 "color" => "#000000"
               ]
@@ -245,12 +245,12 @@ $jsonFlex = [
             "contents" => [
               [
                 "type" => "text",
-                "text" => "New balance",
+                "text" => "พท.โฆษณา",
                 "color" => "#C3C3C3"
               ],
               [
                 "type" => "text",
-                "text" => "฿ 45.57",
+                "text" => "พท.โฆษณา",
                 "align" => "end"
               ]
             ]
@@ -268,13 +268,13 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "View Details",
+            "text" => "ลิ้ง Website โฆษณา",
             "size" => "lg",
             "align" => "start",
             "color" => "#0084B6",
             "action" => [
               "type" => "uri",
-              "label" => "View Details",
+              "label" => "ลิ้ง Website โฆษณา",
               "uri" => "https://google.co.th/"
             ]
           ]
