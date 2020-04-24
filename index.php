@@ -149,10 +149,16 @@ if($text== 'ADD_Q')
 	$replyText["text"] = "หมายเลขคิวปัจุบัน";
 
 
-
-
-
-
+//SELECT AND UPDATE STATUS
+$getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait'");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo="No Q";
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['qNO'];
+    }
+  }
 
 $API_URL = 'https://api.line.me/v2/bot/message';
 $ACCESS_TOKEN = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU='; 
@@ -184,7 +190,7 @@ $jsonFlex = [
           ],
           [
             "type" => "text",
-            "text" => "   ".$text,
+            "text" => "        ".$qNo,
             "size" => "4xl",
             "weight" => "bold",
             "color" => "#000000"
