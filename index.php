@@ -250,7 +250,7 @@ $jsonFlex = [
               ],
               [
                 "type" => "text",
-                "text" => "พท.โฆษณา",
+                "text" => "฿ 45.57",
                 "align" => "end"
               ]
             ]
@@ -268,13 +268,13 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "ลิ้ง Website โฆษณา",
+            "text" => "View Details",
             "size" => "lg",
             "align" => "start",
             "color" => "#0084B6",
             "action" => [
               "type" => "uri",
-              "label" => "ลิ้ง Website โฆษณา",
+              "label" => "View Details",
               "uri" => "https://google.co.th/"
             ]
           ]
