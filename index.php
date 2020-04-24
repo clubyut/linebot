@@ -184,27 +184,27 @@ $jsonFlex = [
           ],
           [
             "type" => "text",
-            "text" => "฿ 100.00",
+            "text" => "    6",
             "size" => "3xl",
             "weight" => "bold",
             "color" => "#000000"
           ],
           [
             "type" => "text",
-            "text" => "Rabbit Line Pay",
+            "text" => "พื้นที่โฆษณา",
             "size" => "lg",
             "weight" => "bold",
             "color" => "#000000"
           ],
           [
             "type" => "text",
-            "text" => "2019.02.14 21:47 (GMT+0700)",
+            "text" => "พื้นที่โฆษณา",
             "size" => "xs",
             "color" => "#B2B2B2"
           ],
           [
             "type" => "text",
-            "text" => "Payment complete.",
+            "text" => "พื้นที่โฆษณา",
             "margin" => "lg",
             "size" => "lg",
             "color" => "#000000"
