@@ -184,8 +184,8 @@ $jsonFlex = [
           ],
           [
             "type" => "text",
-            "text" => "           6",
-            "size" => "5xl",
+            "text" => "        6",
+            "size" => "4xl",
             "weight" => "bold",
             "color" => "#000000"
           ],
