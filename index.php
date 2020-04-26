@@ -188,10 +188,13 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
     while($row = $getMsg->fetch_assoc()){
       //$qNo = $row['qNO'];
     	//รับ id ของผู้ใช้
+    	    $name = $row['name'];
+    	    $userQ= $row['q_no'];
+    	    $textMsg="คิวล่าสุดคือ $qNo คิวของคุณ $name คือ $userQ รออีก $userQ-$qNo ค่ะ";
      		$id = $row['u_id'];
          	$arrayPostData['to'] = $id;
           	$arrayPostData['messages'][0]['type'] = "text";
-          	$arrayPostData['messages'][0]['text'] = $replyText["text"];
+          	$arrayPostData['messages'][0]['text'] = $textMsg;
           	pushMsg($arrayHeader,$arrayPostData);
     }
   }
