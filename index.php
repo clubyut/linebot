@@ -132,6 +132,19 @@ function send_reply_message($url, $post_header, $post_body)
 
     return $result;
 }
+function pushMsg($arrayHeader,$arrayPostData){
+      $strUrl = "https://api.line.me/v2/bot/message/push";
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL,$strUrl);
+      curl_setopt($ch, CURLOPT_HEADER, false);
+      curl_setopt($ch, CURLOPT_POST, true);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $arrayHeader);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arrayPostData));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      $result = curl_exec($ch);
+      curl_close ($ch);
+   }
  //ADD_Q
 $replyText["type"] = "text";
 if($text== 'ADD_Q')
@@ -158,6 +171,33 @@ if($text== 'ADD_Q')
   }
 $mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete'  WHERE q_no='$qNo'");
 $replyText["text"] = "คิวถัดไปคือ $qNo";
+
+//Push Message Queue
+$accessToken = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
+
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait'");
+  $getNum = $getMsg->num_rows;
+  if ( $getNum == "0"){
+      //$qNo="No Q";
+  } else {
+    while($row = $getMsg->fetch_assoc()){
+      //$qNo = $row['qNO'];
+    	//รับ id ของผู้ใช้
+     		$id = $row['u_id'];
+         	$arrayPostData['to'] = $id;
+          	$arrayPostData['messages'][0]['type'] = "text";
+          	$arrayPostData['messages'][0]['text'] = $replyText["text"];
+          	pushMsg($arrayHeader,$arrayPostData);
+    }
+  }
+
+
+
 
 }elseif ($text== 'CURRENT_Q') {
 	$replyText["text"] = "หมายเลขคิวปัจุบัน";
@@ -507,10 +547,6 @@ if ( sizeof($request_array['events']) > 0 ) {
         
     }
 }
-
-
-
-
 
 
 
