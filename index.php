@@ -190,7 +190,8 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
     	//รับ id ของผู้ใช้
     	    $name = $row['name'];
     	    $userQ= $row['q_no'];
-    	    $textMsg="คิวล่าสุดคือ $qNo คิวของคุณ $name คือ $userQ รออีก $userQ-$qNo ค่ะ";
+    	    $waitQ=$userQ-$qNo;
+    	    $textMsg="คิวล่าสุดคือ $qNo คิวของคุณ $name คือ $userQ รออีก $waitQ ค่ะ";
      		$id = $row['u_id'];
          	$arrayPostData['to'] = $id;
           	$arrayPostData['messages'][0]['type'] = "text";
