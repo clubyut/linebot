@@ -173,6 +173,7 @@ $mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete' 
 $replyText["text"] = "คิวถัดไปคือ $qNo";
 
 //Push Message Queue
+$accessToken = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";//copy ข้อความ Channel access token ตอนที่ตั้งค่า
    $content = file_get_contents('php://input');
    $arrayJson = json_decode($content, true);
    $arrayHeader = array();
@@ -218,10 +219,11 @@ $getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='comp
   }
 
 $API_URL = 'https://api.line.me/v2/bot/message';
+$ACCESS_TOKEN = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU='; 
 $channelSecret = 'f9629f9dedd8637ddd1ff39c02ca9ae1';
 
 
-$POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
+$POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $ACCESS_TOKEN);
 
 $request = file_get_contents('php://input');   // Get request content
 $request_array = json_decode($request, true);   // Decode JSON to Array
@@ -397,10 +399,11 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 $API_URL = 'https://api.line.me/v2/bot/message';
+$ACCESS_TOKEN = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU='; 
 $channelSecret = 'f9629f9dedd8637ddd1ff39c02ca9ae1';
 
 
-$POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
+$POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $ACCESS_TOKEN);
 
 $request = file_get_contents('php://input');   // Get request content
 $request_array = json_decode($request, true);   // Decode JSON to Array
