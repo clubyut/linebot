@@ -164,13 +164,13 @@ if($text== 'ADD_Q')
    $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
 
 }elseif ($text== 'CLEAR_Q') {
-	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
+	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` and branch_no=$branchNo");
 	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
 	
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
 	//UPDATE STATUS Q
-	$getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait'");
+	$getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait' and branch_no=$branchNo");
     $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo="No Q";
@@ -179,7 +179,7 @@ if($text== 'ADD_Q')
       $qNo = $row['qNO'];
     }
   }
-$mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete'  WHERE q_no='$qNo'");
+$mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete'  WHERE q_no='$qNo' and branch_no=$branchNo");
 $replyText["text"] = "คิวถัดไปคือ $qNo";
 
 //Push Message Queue
@@ -190,7 +190,7 @@ $accessToken = $access_token;//copy ข้อความ Channel access token �
    $arrayHeader[] = "Content-Type: application/json";
    $arrayHeader[] = "Authorization: Bearer {$accessToken}";
 
-$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait'");
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no=$branchNo");
   $getNum = $getMsg->num_rows;
   if ( $getNum == "0"){
       //$qNo="No Q";
@@ -218,7 +218,7 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
 
 
 //SELECT AND UPDATE STATUS
-$getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete'");
+$getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete' and branch_no=$branchNo");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo="No Q";
@@ -388,7 +388,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 }else{
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
-  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait'");
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait' and branch_no=$branchNo");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo=1;
