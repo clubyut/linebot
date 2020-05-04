@@ -1,20 +1,7 @@
 <?php
 //mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
-$access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=';
-  $LINEData = file_get_contents('php://input');
-  $LINEDatas['token'] = $access_token;
-  $jsonData = json_decode($LINEData,true);
-
-  $replyToken = $jsonData["events"][0]["replyToken"];
-  $userID = $jsonData["events"][0]["source"]["userId"];
-  $text = $jsonData["events"][0]["message"]["text"];
-  $timestamp = $jsonData["events"][0]["timestamp"]; //$results['response']
-  $mID = $jsonData["events"][0]["message"]["id"];
-  $mType =$jsonData["events"][0]["message"]["type"];
-  $branchNo=1;
-  $qNo=1;
-  $qStatus="wait";
-  $servername = "us-cdbr-iron-east-01.cleardb.net";
+$branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?id=1
+ $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
   $dbname = "heroku_9899d38b5c56894";
@@ -25,7 +12,30 @@ $access_token = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+
   $errorcode = $mysql->connect_error;
   print("MySQL(Connection)> ".$errorcode);
   }
+  $getBranch = $mysql->query("SELECT ID,name,accessToken FROM  branch WHERE ID=$branchNo");
+  $getNum = $getBranch->num_rows;
+  if ( $getNum == "0"){
+      $access_token='';
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $access_token = $row['accessToken'];
+    }
+  }
 
+
+$access_token = $access_token;
+  $LINEData = file_get_contents('php://input');
+  $LINEDatas['token'] = $access_token;
+  $jsonData = json_decode($LINEData,true);
+
+  $replyToken = $jsonData["events"][0]["replyToken"];
+  $userID = $jsonData["events"][0]["source"]["userId"];
+  $text = $jsonData["events"][0]["message"]["text"];
+  $timestamp = $jsonData["events"][0]["timestamp"]; //$results['response']
+  $mID = $jsonData["events"][0]["message"]["id"];
+  $mType =$jsonData["events"][0]["message"]["type"];
+  $qNo=1;
+  $qStatus="wait";
   function sendMessage($replyJson, $sendInfo){
           $ch = curl_init($sendInfo["URL"]);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -173,7 +183,7 @@ $mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete' 
 $replyText["text"] = "คิวถัดไปคือ $qNo";
 
 //Push Message Queue
-$accessToken = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+$accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
    $content = file_get_contents('php://input');
    $arrayJson = json_decode($content, true);
    $arrayHeader = array();
@@ -219,7 +229,7 @@ $getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='comp
   }
 
 $API_URL = 'https://api.line.me/v2/bot/message';
-$ACCESS_TOKEN = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU='; 
+$ACCESS_TOKEN = $access_token; 
 $channelSecret = 'f9629f9dedd8637ddd1ff39c02ca9ae1';
 
 
@@ -399,7 +409,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 $API_URL = 'https://api.line.me/v2/bot/message';
-$ACCESS_TOKEN = 'yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU='; 
+$ACCESS_TOKEN = $access_token; 
 $channelSecret = 'f9629f9dedd8637ddd1ff39c02ca9ae1';
 
 
@@ -558,7 +568,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 
   }
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
-  $lineData['AccessToken'] = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";
+  $lineData['AccessToken'] = $access_token;
 
   $replyJson["replyToken"] = $replyToken;
   $replyJson["messages"][0] = $replyText;
