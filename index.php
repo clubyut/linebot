@@ -17,7 +17,7 @@ $branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?i
   if ( $getNum == "0"){
       $access_token='';
   } else {
-    while($row = $getQno->fetch_assoc()){
+    while($row =  $getBranch->fetch_assoc()){
       $access_token = $row['accessToken'];
     }
   }
@@ -568,7 +568,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 
   }
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
-  $lineData['AccessToken'] = "yK9Mley/uEEGeEeVjkR2UHggFuwqO1yeg149LN0lUSG5/NgXxcgwYgzm3A5FOp+SfPbpCESrotui1CLv2YEdcsirvcKET+u8EaPNPHhVWdIGJgUewZYFbq6lOZzhftK6akBtUm2rkFOyUVdL1B/URwdB04t89/1O/w1cDnyilFU=";
+  $lineData['AccessToken'] = $access_token;
 
   $replyJson["replyToken"] = $replyToken;
   $replyJson["messages"][0] = $replyText;
