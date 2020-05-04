@@ -164,7 +164,7 @@ if($text== 'ADD_Q')
    $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
 
 }elseif ($text== 'CLEAR_Q') {
-	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` and branch_no=$branchNo");
+	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
 	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
 	
@@ -385,7 +385,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
-}else{
+}else if($text<>''){
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
   $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait' and branch_no=$branchNo");
@@ -566,7 +566,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
-  }
+  }//Else $text
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
 
