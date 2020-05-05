@@ -604,7 +604,7 @@ if ( sizeof($request_array['events']) > 0 ) {
   {
   	//$userID
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
-$LINEDatas['token'] = $replyToken;
+$LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
 $permission='admin';
 $displayName=$results['displayName'];
