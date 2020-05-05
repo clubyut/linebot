@@ -607,23 +607,7 @@ $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $replyToken;
 $results = getLINEProfile($LINEDatas);
   	//Insert User Profile
-$mysql->query("INSERT INTO `heroku_9899d38b5c56894`.`user_profiles`
-(`u_id`,
-`branch_no`,
-`displayName`,
-`pictureUrl`,
-`statusMessage`,
-`email`,
-`permission`)
-VALUES
-('$userID',
-$branchNo,
-'$results['displayName']',
-'$results['pictureUrl']',
-'$results['statusMessage']',
-'$results['email']',
-'admin');
-");
+
 
   }//Else $text
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
