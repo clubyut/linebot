@@ -607,8 +607,12 @@ $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $replyToken;
 $results = getLINEProfile($LINEDatas);
 $permission='admin';
+$displayName=$results['displayName'];
+$pictureUrl=$results['pictureUrl'];
+$statusMessage=$results['statusMessage'];
+$email=$results['email'];
   	//Insert User Profile
-$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID',$branchNo,'$results['displayName']','$results['pictureUrl']','$results['statusMessage']','$results['email']','$permission')");
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$statusMessage','$email','$permission')");
 
   }//Else $text
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
