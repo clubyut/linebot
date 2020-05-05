@@ -566,6 +566,31 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
+  }else if($mType=='user')
+  {
+  	//$userID
+$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $replyToken;
+$results = getLINEProfile($LINEDatas);
+  	//Insert User Profile
+$mysql->query("INSERT INTO `heroku_9899d38b5c56894`.`user_profiles`
+(`u_id`,
+`branch_no`,
+`displayName`,
+`pictureUrl`,
+`statusMessage`,
+`email`,
+`permission`)
+VALUES
+('$userID',
+$branchNo,
+'$results['displayName']',
+'$results['pictureUrl']',
+'$results['statusMessage']',
+'$results['email']',
+'admin');
+");
+
   }//Else $text
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
@@ -578,3 +603,39 @@ if ( sizeof($request_array['events']) > 0 ) {
   $results = sendMessage($encodeJson,$lineData);
   echo $results;
   http_response_code(200);
+
+
+  function getLINEProfile($datas)
+{
+   $datasReturn = [];
+   $curl = curl_init();
+   curl_setopt_array($curl, array(
+     CURLOPT_URL => $datas['url'],
+     CURLOPT_RETURNTRANSFER => true,
+     CURLOPT_ENCODING => "",
+     CURLOPT_MAXREDIRS => 10,
+     CURLOPT_TIMEOUT => 30,
+     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+     CURLOPT_CUSTOMREQUEST => "GET",
+     CURLOPT_HTTPHEADER => array(
+       "Authorization: Bearer ".$datas['token'],
+       "cache-control: no-cache"
+     ),
+   ));
+   $response = curl_exec($curl);
+   $err = curl_error($curl);
+   curl_close($curl);
+   if($err){
+      $datasReturn['result'] = 'E';
+      $datasReturn['message'] = $err;
+   }else{
+      if($response == "{}"){
+          $datasReturn['result'] = 'S';
+          $datasReturn['message'] = 'Success';
+      }else{
+          $datasReturn['result'] = 'E';
+          $datasReturn['message'] = $response;
+      }
+   }
+   return $datasReturn;
+}
