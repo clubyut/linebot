@@ -224,7 +224,7 @@ $accessToken = $access_token;//copy ข้อความ Channel access token �
    $arrayHeader[] = "Content-Type: application/json";
    $arrayHeader[] = "Authorization: Bearer {$accessToken}";
    //Display Current Q
-$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no=$branchNo and q_no='$qNo'");
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where  branch_no=$branchNo and q_no='$qNo'");
 $getNum = $getMsg->num_rows;
   if ( $getNum == "0"){
       //$qNo="No Q";
@@ -457,7 +457,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   }else if($text<>''){
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
-  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait' and branch_no=$branchNo");
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_no=$branchNo");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo=1;
