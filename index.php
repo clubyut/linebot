@@ -445,13 +445,17 @@ $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
 $profileText = implode("", $results);
+$x1=implode("", $['displayName']);
+$x2=implode("", $results['pictureUrl']);
+$x3=implode("", $results['statusMessage']);
+$x4=implode("", $results['email']);
 $permission='admin';
 $displayName=$results['displayName'];
 $pictureUrl=$results['pictureUrl'];
 $statusMessage=$results['statusMessage'];
 $email=$results['email'];
   	//Insert User Profile
-$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$profileText','$pictureUrl','$statusMessage','$email','$permission')");
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$x1','$profileText','$statusMessage','$email','$permission')");
 
 
   }else if($text<>''){
