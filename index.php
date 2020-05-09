@@ -425,7 +425,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
-$profileText = implode("", $profile);
+$profileText = implode("", $results);
 $permission='admin';
 $displayName=$results['displayName'];
 $pictureUrl=$results['pictureUrl'];
