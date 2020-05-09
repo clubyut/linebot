@@ -600,7 +600,7 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
-  }else //if($mType=='user')
+  }else if($text== 'ADD_USER')
   {
   	//$userID
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
