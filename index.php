@@ -419,7 +419,21 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
-}else if($text<>''){
+}else if($text== 'ADD_USER')
+  {
+  	//$userID
+$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $access_token;
+$results = getLINEProfile($LINEDatas);
+$permission='admin';
+$displayName=$results['displayName'];
+$pictureUrl=$results['pictureUrl'];
+$statusMessage=$results['statusMessage'];
+$email=$results['email'];
+  	//Insert User Profile
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$statusMessage','$email','$permission')");
+
+  }else if($text<>''){
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
   $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE status='wait' and branch_no=$branchNo");
@@ -599,20 +613,6 @@ if ( sizeof($request_array['events']) > 0 ) {
 
 
 
-
-  }else if($text== 'ADD_USER')
-  {
-  	//$userID
-$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
-$LINEDatas['token'] = $access_token;
-$results = getLINEProfile($LINEDatas);
-$permission='admin';
-$displayName=$results['displayName'];
-$pictureUrl=$results['pictureUrl'];
-$statusMessage=$results['statusMessage'];
-$email=$results['email'];
-  	//Insert User Profile
-$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$statusMessage','$email','$permission')");
 
   }//Else $text
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
