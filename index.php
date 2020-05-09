@@ -223,8 +223,27 @@ $accessToken = $access_token;//copy ข้อความ Channel access token �
    $arrayHeader = array();
    $arrayHeader[] = "Content-Type: application/json";
    $arrayHeader[] = "Authorization: Bearer {$accessToken}";
-
-$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no=$branchNo");
+   //Display Current Q
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no=$branchNo and q_no='$qNo'");
+$getNum = $getMsg->num_rows;
+  if ( $getNum == "0"){
+      //$qNo="No Q";
+  } else {
+    while($row = $getMsg->fetch_assoc()){
+      //$qNo = $row['qNO'];
+    	//รับ id ของผู้ใช้
+    	    $name = $row['name'];
+    	    $userQ= $row['q_no'];
+    	    $waitQ=$userQ-$qNo;
+    	    $textMsg="ถึงคิวของคุณ $name แล้วนะคะ";
+     		$id = $row['u_id'];
+         	$arrayPostData['to'] = $id;
+          	$arrayPostData['messages'][0]['type'] = "text";
+          	$arrayPostData['messages'][0]['text'] = $textMsg;
+          	pushMsg($arrayHeader,$arrayPostData);
+    }
+  }
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no=$branchNo Order By q_no LIMIT 3");
   $getNum = $getMsg->num_rows;
   if ( $getNum == "0"){
       //$qNo="No Q";
