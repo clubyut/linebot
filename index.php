@@ -446,17 +446,15 @@ $LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
 $profileText = implode("", $results);
 $str_arr = explode (",", $profileText); 
-$x1=$str_arr[0];
-$x2=implode("", $results['pictureUrl']);
-$x3=implode("", $results['statusMessage']);
-$x4=implode("", $results['email']);
+$x1=explode (":", $str_arr[1]); 
+$x2=explode (":", $str_arr[2]); 
 $permission='admin';
-$displayName=$results['displayName'];
-$pictureUrl=$results['pictureUrl'];
+$displayName=$x1[1];
+$pictureUrl=$x2[1];
 $statusMessage=$results['statusMessage'];
 $email=$results['email'];
   	//Insert User Profile
-$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$x1','$profileText','$statusMessage','$email','$permission')");
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission')");
 
 
   }else if($text<>''){
