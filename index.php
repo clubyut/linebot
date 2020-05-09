@@ -452,7 +452,7 @@ $permission='admin';
 $displayName=$x1[1];
 $pictureUrl=$x2[1];
 $statusMessage=$results['statusMessage'];
-$email=$results["E"]["displayName"];
+$email=$results["E"][0]["displayName"];
   	//Insert User Profile
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission')");
 
