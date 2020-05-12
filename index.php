@@ -217,7 +217,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
 
 	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
   	//
@@ -318,8 +318,8 @@ $str_arr = explode (",", $profileText);
 $x1=explode (":", $str_arr[1]); 
 $x2=explode (":", $str_arr[2]); 
 $permission='admin';
-$displayName=$x1[1];
-$pictureUrl=$x2[1];
+$displayName=str_replace("\"", "", $x1[1]);
+$pictureUrl=str_replace("\"", "", $x2[1]);
 $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
   	//Insert User Profile
