@@ -201,7 +201,8 @@ $results = getLINEProfile($LINEDatas);
 $profileText = implode("", $results);
 $str_arr = explode (",", $profileText); 
 $x1=explode (":", $str_arr[1]);  
-$displayName=$x1[1];
+//$displayName=$x1[1];
+$displayName=str_replace("\"", "", $x1[1]);
 $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ 999 ค่ะ";
 
   	//
