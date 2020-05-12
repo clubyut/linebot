@@ -194,8 +194,17 @@ $replyText["type"] = "text";
 if($text== 'ADD_Q')
 {
 	
-   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");
-   $replyText["text"] = "กรุณาป้อนชื่อด้วยค่ะ";
+   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");   
+$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $access_token;
+$results = getLINEProfile($LINEDatas);
+$profileText = implode("", $results);
+$str_arr = explode (",", $profileText); 
+$x1=explode (":", $str_arr[1]);  
+$displayName=$x1[1];
+$replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ 999 ค่ะ";
+
+  	//
 
 }elseif ($text== 'CLEAR_Q') {
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
