@@ -226,7 +226,25 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
 	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
-	
+
+
+//SELECT AND UPDATE STATUS
+	$permission='user';
+$getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$userID' and permission='admin'");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      //user
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $permission='admin';
+    }
+  }
+
+
+    
+    if($permission=='admin')
+    {
+	///////////BEGIN NEXT Q
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
 	//UPDATE STATUS Q
 	$getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait' and branch_no=$branchNo");
@@ -288,7 +306,8 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
     }
   }
 
-
+///// END NEXT Q
+}
 
 
 }elseif ($text== 'CURRENT_Q') {
