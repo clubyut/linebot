@@ -345,10 +345,10 @@ $email=$results["E"][0]["displayName"];
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission')");
 
 
-  }else if(if($text== 'B_ADD_Q' && $permission=='admin')){
+  }else if($text== 'B_ADD_Q' && $permission =='admin'){
 	
 	$replyText["text"] = "ป้อนชื่อ และ นามสกุลด้วยนะคะ";
-  }else if(if($text <> '' && $permission=='admin')){
+  }else if($text <> '' && $permission =='admin'){
 	//ADDMIN ADD_Q
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
