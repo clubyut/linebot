@@ -191,7 +191,20 @@ function pushMsg($arrayHeader,$arrayPostData){
 }
  //ADD_Q
 $replyText["type"] = "text";
-if($text== 'ADD_Q')
+///// ADD PERMISSTION
+$permission='user';
+$getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$userID' and permission='admin'");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      //user
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $permission='admin';
+    }
+  }
+
+///////////////////////////////////////
+if($text== 'ADD_Q' && $permission=='user')
 {
 	
    //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");   
@@ -228,20 +241,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
 }elseif ($text== 'NEXT_Q') {
 
 
-//SELECT AND UPDATE STATUS
-	$permission='user';
-$getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$userID' and permission='admin'");
-  $getNum = $getQno->num_rows;
-  if ( $getNum == "0"){
-      //user
-  } else {
-    while($row = $getQno->fetch_assoc()){
-      $permission='admin';
-    }
-  }
-
-
-    
+//SELECT AND UPDATE STATUS 
     if($permission=='admin')
     {
 	///////////BEGIN NEXT Q
@@ -336,7 +336,7 @@ $profileText = implode("", $results);
 $str_arr = explode (",", $profileText); 
 $x1=explode (":", $str_arr[1]); 
 $x2=explode (":", $str_arr[2]); 
-$permission='admin';
+$permission='user';
 $displayName=str_replace("\"", "", $x1[1]);
 $pictureUrl=str_replace("\"", "", $x2[1]);
 $statusMessage=$results['statusMessage'];
@@ -345,9 +345,28 @@ $email=$results["E"][0]["displayName"];
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission')");
 
 
-  }else if($text<>''){
+  }else if(if($text== 'B_ADD_Q' && $permission=='admin')){
 	
-	$replyText["text"] = "เลือกเมนูที่ต้องการจัดการคิวได้เลยค่ะ";
+	$replyText["text"] = "ป้อนชื่อ และ นามสกุลด้วยนะคะ";
+  }else if(if($text <> '' && $permission=='admin')){
+	//ADDMIN ADD_Q
+	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+  //select Max AddQ
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_no=$branchNo");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo=1;
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['q_no'];
+    }
+    $qNo =$qNo +1;
+  }
+
+	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
+     $replyText["text"] = "หมายเลขคิวของคุณลูกค้า $text คือ $qNo ค่ะ";
+  	//
   }//Else $text
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
