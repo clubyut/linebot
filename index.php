@@ -393,7 +393,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
      $replyText["text"] = "หมายเลขคิวของคุณลูกค้า $text คือ $qNo ค่ะ";
   	//
-  }else if(($text== 'CANCEL_Q ') && ($permission =='user'))
+  }else if(($text== 'CANCEL_Q') && ($permission =='user'))
   {
   	//ยกเลิกคิวที่มี status wait
   	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
