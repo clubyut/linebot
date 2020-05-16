@@ -215,7 +215,7 @@ if($text== 'ADD_Q' && $permission=='user')
   } else {
     
   }
-if($addNewQ='T')
+if($addNewQ=='T')
 {
    //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");  
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
