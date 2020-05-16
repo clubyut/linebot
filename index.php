@@ -206,8 +206,18 @@ $getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$u
 ///////////////////////////////////////
 if($text== 'ADD_Q' && $permission=='user')
 {
-	
-   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");   
+	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
+	$addNewQ='T';
+    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_no=$branchNo AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_no=$branchNo)");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $addNewQ='F';
+  } else {
+    
+  }
+if($addNewQ='T')
+{
+   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");  
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
@@ -234,8 +244,24 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
   	//
+ }else{
+ 	////// รอคิว
+ 	  $qNo = 0;
+      $name = '';
+ 	$getQno = $mysql->query("SELECT u_id,name,q_no FROM add_q where branch_no=$branchNo AND u_id='$userID' and status ='wait'");
+    $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      //
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['q_no'];
+      $name = $row['name'];
+    }
+  }
+ 	$replyText["text"] = "คุณ $name ได้เพิ่มคิวไปแล้วก่อนหน้าคิวเลขที่ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดยกเลิกคิวก่อนนะค่ะ";
+ }
 
-}elseif ($text== 'CLEAR_Q') {
+}elseif ($text== 'CLEAR_Q') && $permission =='admin' {
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
 	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
