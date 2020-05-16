@@ -206,7 +206,7 @@ $getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$u
 ///////////////////////////////////////
 if($text== 'ADD_Q' && $permission=='user')
 {
-	//9
+	
    //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");   
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $access_token;
@@ -235,7 +235,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
      $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
   	//
 
-}elseif ($text== 'CLEAR_Q') && $permission =='admin' {
+}elseif ($text== 'CLEAR_Q') {
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
 	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
