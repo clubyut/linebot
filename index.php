@@ -206,7 +206,34 @@ $getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$u
 ///////////////////////////////////////
 if($text== 'ADD_Q' && $permission=='user')
 {
-	
+	//9
+   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");   
+$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $access_token;
+$results = getLINEProfile($LINEDatas);
+$profileText = implode("", $results);
+$str_arr = explode (",", $profileText); 
+$x1=explode (":", $str_arr[1]);  
+//$displayName=$x1[1];
+$displayName=str_replace("\"", "", $x1[1]);
+$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+  //select Max AddQ
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_no=$branchNo");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo=1;
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['q_no'];
+    }
+    $qNo =$qNo +1;
+  }
+
+	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus')");
+     //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
+     $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
+  	//
 
 }elseif ($text== 'CLEAR_Q') && $permission =='admin' {
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
