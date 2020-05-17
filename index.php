@@ -231,7 +231,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "หมายเลขคิวปัจจุบัน",
+            "text" => "กรุณาเลือกร้านค้าที่ต้องการจองคิวค่ะ",
             "size" => "lg",
             "align" => "start",
             "weight" => "bold",
