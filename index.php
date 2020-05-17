@@ -240,13 +240,13 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
 ///////////////////////////////////////
   if($isUsed=='T')
   {
-       $replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
-if($text== 'ADD_Q' && $permission=='user5')
+       
+if($text== 'ADD_Q' && $permission=='user')
 {
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
-
-	if($Iselect_B=='T')
+    $replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
+	if($Iselect_B=='T55')
 	{
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
 	$addNewQ='F';
