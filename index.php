@@ -253,9 +253,15 @@ $jsonFlex = [
             "margin" => "lg",
             "contents" => [
               [
-                "type" => "text",
+                "type" => "button",
+                "style" => "primary",
                 "text" => "พื้นที่โฆษณา",
-                "color" => "#009813"
+                "color" => "#009813",
+                "action" => [
+              	"type" => "message",
+              	"label" => "มัธยมศึกษาปีที่ 1",
+              	"text" => "Teerayut"
+                  ]
               ],
               [
                 "type" => "text",
