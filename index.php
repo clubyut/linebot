@@ -205,7 +205,7 @@ $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles whe
     $tel=$arrTxt[1]; 
   	  $isUsed='F';
       
-      if($tel=='')
+      if(strlen($tel)<>10)
       {
       	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
       }else
