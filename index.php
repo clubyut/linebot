@@ -238,7 +238,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     $branch_code=$arrTxt[1]; 
     $replyText["text"] = "หมายเลขคิวของคุณ $text คือ $branch_code ค่ะ";
 ///////////////////////////////////////
-  if($isUsed=='T')
+  if($isUsed=='T55')
   {
 
 if($text== 'ADD_Q' && $permission=='user')
