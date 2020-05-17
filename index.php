@@ -13,7 +13,7 @@ $branchNo = '111';
   $errorcode = $mysql->connect_error;
   print("MySQL(Connection)> ".$errorcode);
   }
-  $getBranch = $mysql->query("SELECT ID,name,accessToken FROM  branch WHERE ID=$branchNo");
+  $getBranch = $mysql->query("SELECT ID,name,accessToken FROM  branch WHERE branch_code='$branchNo'");
   $getNum = $getBranch->num_rows;
   if ( $getNum == "0"){
       $access_token='';
