@@ -213,6 +213,7 @@ if($text== 'ADD_Q' && $permission=='user')
 	$jtext="jtext";
 	$resp="resp";				
 					$resp = "กรุณาเลือกร้านที่ต้องการจองคิว";
+					$messagesA=array(2);
 					$messages = [
 						'type' => 'text',
 						'text' => $resp,
@@ -229,31 +230,9 @@ if($text== 'ADD_Q' && $permission=='user')
 							]
 						]
 					];
-
-					$messagesX[0] = $messages;
-					_sendOut($access_token, $replyToken, $messagesX);
-					$messagesX = array(1);
-	$jtext="jtext";
-	$resp="resp";				
-					$resp = "กรุณาเลือกร้านที่ต้องการจองคิว";
-					$messages = [
-						'type' => 'text',
-						'text' => $resp,
-						'quickReply' => [
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'message',
-										'label' => 'ร้านที่ 1',
-										'text' => 'Branch 1'
-									]
-								]
-							]
-						]
-					];
-
-					$messagesX[0] = $messages;
+                    $messagesA[0]=$messages;
+                    $messagesA[1]=$messages;
+					$messagesX[0] = $messagesA;
 					_sendOut($access_token, $replyToken, $messagesX);
 
 
