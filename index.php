@@ -231,7 +231,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "หมายเลขคิวปัจจุบัน",
+            "text" => "กรุณาเลือกร้านค้าที่ต้องการจองคิวค่ะ",
             "size" => "lg",
             "align" => "start",
             "weight" => "bold",
@@ -314,24 +314,6 @@ $jsonFlex = [
             "type" => "separator",
             "margin" => "lg",
             "color" => "#C3C3C3"
-          ]
-        ]
-      ],
-      "footer" => [
-        "type" => "box",
-        "layout" => "horizontal",
-        "contents" => [
-          [
-            "type" => "text",
-            "text" => "ลิ้งพื้นที่โฆษณา",
-            "size" => "lg",
-            "align" => "start",
-            "color" => "#0084B6",
-            "action" => [
-              "type" => "uri",
-              "label" => "View Details",
-              "uri" => "https://google.co.th/"
-            ]
           ]
         ]
       ]
