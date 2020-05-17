@@ -227,7 +227,10 @@ if($text== 'ADD_Q' && $permission=='user')
 									]
 								]
 							]
-						],
+						]
+					],[
+						'type' => 'text',
+						'text' => $resp,
 						'quickReply' => [
 							'items' => [
 								[
