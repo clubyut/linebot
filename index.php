@@ -206,6 +206,10 @@ $getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$u
 ///////////////////////////////////////
 if($text== 'ADD_Q' && $permission=='user')
 {
+	$Iselect_B='F';
+	////// ทำการเลือก Branch 
+	if($Iselect_B=='T')
+	{
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
 	$addNewQ='F';
     $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_no=$branchNo AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_no=$branchNo)");
@@ -260,6 +264,8 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
  	$replyText["text"] = "คุณ $name ได้เพิ่มคิวไปแล้วก่อนหน้าคิวเลขที่ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดยกเลิกคิวก่อนนะค่ะ";
  }
+ 
+}////////////// END ADD_Q
 
 }elseif (($text== 'CLEAR_Q') && $permission =='admin') {
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
@@ -285,6 +291,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
 $mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete'  WHERE q_no='$qNo' and branch_no=$branchNo");
 $replyText["text"] = "คิวถัดไปคือ $qNo";
 
+//ตรวจสอบถ้าเป็นคิว Admin ผู้ ADD จะไม่ push message แจ้งคิว wait 
 //Push Message Queue
 $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
    $content = file_get_contents('php://input');
@@ -333,6 +340,31 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
   }
 
 ///// END NEXT Q
+}else
+{
+	// ทำการเลือก Branch
+	$messagesX = array(1);
+	$jtext="jtext";
+	$resp="resp";				
+					$resp = $row["Detail"] . " และทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
+					$messages = [
+						'type' => 'text',
+						'text' => $resp,
+						'quickReply' => [
+							'items' => [
+								[
+									'type' => 'action',
+									'action' => [
+										'type' => 'camera',
+										'label' => 'Camera'
+									]
+								]
+							]
+						]
+					];
+
+					$messagesX[0] = $messages;
+					_sendOut($access_token, $replyToken, $messagesX);
 }
 
 
