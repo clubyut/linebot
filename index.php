@@ -244,6 +244,34 @@ $jsonFlex = [
             "weight" => "bold",
             "color" => "#000000"
           ],
+      "body" => [
+        "type" => "box",
+        "layout" => "vertical",
+        "contents" => [
+          [
+            "type" => "separator",
+            "color" => "#C3C3C3"
+          ],
+          [
+            "type" => "box",
+            "layout" => "baseline",
+            "margin" => "lg",
+            "contents" => [
+              [
+                "type" => "text",
+                "text" => "พื้นที่โฆษณา",
+                "align" => "start",
+                "color" => "#C3C3C3"
+              ],
+              [
+                "type" => "text",
+                "text" => "TEST",
+                "align" => "end",
+                "color" => "#000000"
+              ]
+            ]
+          ]
+      ],
       "footer" => [
         "type" => "box",
         "layout" => "horizontal",
