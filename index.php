@@ -197,8 +197,7 @@ $permission='user';
 //// ตรวจสอบการลงทะเบียน
 $Arrtext=explode (" ", $text);
 $name=$Arrtext[0];
-$tel=$Arrtext[1];
-$replyText["text"] = "คุณ $name เบอร์โทร $tel ลงทะเบียนเรียบร้อยค่ะ";
+$tel='';
 ///// ADD PERMISSTION
 
 $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
