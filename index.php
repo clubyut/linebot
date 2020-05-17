@@ -1,7 +1,7 @@
 <?php
 //mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
 //$branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?id=1
-$branchNo = '111';
+$branchNo = 1;
  $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
@@ -193,14 +193,41 @@ function pushMsg($arrayHeader,$arrayPostData){
  //ADD_Q
 $replyText["type"] = "text";
 $isUsed='T';
-///// ADD PERMISSTION
 $permission='user';
+//// ตรวจสอบการลงทะเบียน
+$Arrtext=explode (" ", $text);
+$name=$Arrtext[0];
+$tel=$Arrtext[1];
+///// ADD PERMISSTION
+
 $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
-      //ยังไม่เคยลงทะเบียน
-  	  $isUsed='F';
-      $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+      
+		if($tel<>'')
+			{
+				// ADD user+_rofile
+				$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $access_token;
+$results = getLINEProfile($LINEDatas);
+$profileText = implode("", $results);
+$str_arr = explode (",", $profileText); 
+$x1=explode (":", $str_arr[1]); 
+$x2=explode (":", $str_arr[2]); 
+$permission='user';
+$displayName=str_replace("\"", "", $x1[1]);
+$pictureUrl=str_replace("\"", "", $x2[1]);
+$statusMessage=$results['statusMessage'];
+$email=$results["E"][0]["displayName"];
+  	//Insert User Profile
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
+				$replyText["text"] = "คุณ $name เบอร์โทร $tel ลงทะเบียนเรียบร้อยค่ะ";
+			}else
+			{
+      			//ยังไม่เคยลงทะเบียน
+  	  			$isUsed='F';
+      			$replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+			}
 
   } else {
     while($row = $getQno->fetch_assoc()){
