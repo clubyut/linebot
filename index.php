@@ -1,6 +1,7 @@
 <?php
 //mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
-$branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?id=1
+//$branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?id=1
+$branchNo = '111';
  $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
@@ -191,124 +192,31 @@ function pushMsg($arrayHeader,$arrayPostData){
 }
  //ADD_Q
 $replyText["type"] = "text";
+$isUsed='T';
 ///// ADD PERMISSTION
 $permission='user';
-$getQno = $mysql->query("select u_id,branch_no from user_profiles where u_id='$userID' and permission='admin'");
+$getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
-      //user
+      //ยังไม่เคยลงทะเบียน
+  	  $isUsed='F';
+      $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+
   } else {
     while($row = $getQno->fetch_assoc()){
-      $permission='admin';
+      $isUsed='T';
+      $permission=$row['permission'];
     }
   }
 
 ///////////////////////////////////////
+  if($isUsed=='T')
+  {
+
 if($text== 'ADD_Q' && $permission=='user')
 {
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
-// ทำการเลือก Branch
-$API_URL = 'https://api.line.me/v2/bot/message';
-$ACCESS_TOKEN = $access_token; 
-$channelSecret = 'f9629f9dedd8637ddd1ff39c02ca9ae1';
-
-
-$POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $ACCESS_TOKEN);
-
-$request = file_get_contents('php://input');   // Get request content
-$request_array = json_decode($request, true);   // Decode JSON to Array
-
-$jsonFlex = [
-    "type" => "flex",
-    "altText" => "Hello Flex Message",
-    "contents" => [
-      "type" => "bubble",
-      "direction" => "ltr",
-      "header" => [
-        "type" => "box",
-        "layout" => "vertical",
-        "contents" => [
-          [
-            "type" => "text",
-            "text" => "เลือกร้านค้าที่ต้องการจองคิวค่ะ",
-            "size" => "lg",
-            "align" => "start",
-            "weight" => "bold",
-            "color" => "#009813"
-          ]
-        ]
-      ],
-      "body" => [
-        "type" => "box",
-        "layout" => "vertical",
-        "contents" => [
-          [
-            "type" => "separator",
-            "color" => "#009813"
-          ],
-          [
-            "type" => "box",
-            "layout" => "vertical",
-            "margin" => "lg",
-            "contents" => [
-              [
-            "type" => "button",
-            "text" => "ลิ้งพื้นที่โฆษณา",
-            "size" => "lg",
-            "align" => "start",
-            "color" => "#0084B6",
-            "action" => [
-              "type" => "message",
-              "label" => "View Details",
-              "text" => "มัธยมศึกษาปีที่ 1"
-            ]
-          ],
-              [
-                "type" => "text",
-                "text" => "TEST",
-                "color" => "#009813"
-              ]
-            ]
-          ],
-          [
-            "type" => "separator",
-            "margin" => "lg",
-            "color" => "#C3C3C3"
-          ]
-        ]
-      ]
-    ]
-  ];
-
-
-
-if ( sizeof($request_array['events']) > 0 ) {
-    foreach ($request_array['events'] as $event) {
-        error_log(json_encode($event));
-        $reply_message = '';
-        $reply_token = $event['replyToken'];
-
-
-        $data = [
-            'replyToken' => $reply_token,
-            'messages' => [$jsonFlex]
-        ];
-
-        print_r($data);
-
-        $post_body = json_encode($data, JSON_UNESCAPED_UNICODE);
-
-        $send_result = send_reply_message($API_URL.'/reply', $POST_HEADER, $post_body);
-
-        echo "Result: ".$send_result."\r\n";
-        
-    }
-}
-
-
-
-
 
 	if($Iselect_B=='T')
 	{
@@ -533,6 +441,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
   	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
+}///////// END  IF Isused
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
 
