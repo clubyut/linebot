@@ -245,7 +245,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "separator",
-            "color" => "#C3C3C3"
+            "color" => "#009813"
           ],
           [
             "type" => "box",
@@ -255,12 +255,12 @@ $jsonFlex = [
               [
                 "type" => "text",
                 "text" => "พื้นที่โฆษณา",
-                "color" => "#C3C3C3"
+                "color" => "#009813"
               ],
               [
                 "type" => "text",
                 "text" => "TEST",
-                "align" => "end"
+                "color" => "#009813"
               ]
             ]
           ],
