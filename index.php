@@ -236,9 +236,8 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
    $arrTxt=explode(" ",  $text);
     $text=$arrTxt[0]; 
     $tel=$arrTxt[1];  
-    $replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
 ///////////////////////////////////////
-  if($isUsed=='T55')
+  if($isUsed=='T')
   {
    
 if($text== 'ADD_Q' && $permission=='user')
