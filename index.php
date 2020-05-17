@@ -236,6 +236,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     $arrTxt=explode(" ",  $text);
     $text=$arrTxt[0]; 
     $branch_code=$arrTxt[1]; 
+    $replyText["text"] = "หมายเลขคิวของคุณ $text คือ $branch_code ค่ะ";
 ///////////////////////////////////////
   if($isUsed=='T')
   {
@@ -280,7 +281,8 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
     $qNo =$qNo +1;
   }
 
-	
+	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
   	//
