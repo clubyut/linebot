@@ -193,6 +193,7 @@ function pushMsg($arrayHeader,$arrayPostData){
  //ADD_Q
 $replyText["type"] = "text";
 $isUsed='T';
+///
 ///// ADD PERMISSTION
 $permission='user';
 $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
@@ -441,10 +442,8 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
   	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
-}else
-{///////// END  IF Isused
-	$replyText["text"] = "ลงทะเบียนครั้งแรกกรอก$isUsed";
-}
+}///////// END  IF Isused
+
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
 
