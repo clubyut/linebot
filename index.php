@@ -204,10 +204,13 @@ $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles whe
     $name=$arrTxt[0]; 
     $tel=$arrTxt[1]; 
   	  $isUsed='F';
-      $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ $name และ $tel และ $text";
+      
       if($tel=='')
       {
-      	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ 5555";
+      	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+      }else
+      {
+      	$replyText["text"] = "คุณ $name หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
       }
 
   } else {
