@@ -236,33 +236,6 @@ $jsonFlex = [
             "align" => "start",
             "weight" => "bold",
             "color" => "#009813"
-          ],
-          [
-            "type" => "text",
-            "text" => "        ".$qNo,
-            "size" => "4xl",
-            "weight" => "bold",
-            "color" => "#000000"
-          ],
-          [
-            "type" => "text",
-            "text" => "พื้นที่โฆษณา",
-            "size" => "lg",
-            "weight" => "bold",
-            "color" => "#000000"
-          ],
-          [
-            "type" => "text",
-            "text" => "พื้นที่โฆษณา",
-            "size" => "xs",
-            "color" => "#B2B2B2"
-          ],
-          [
-            "type" => "text",
-            "text" => "พื้นที่โฆษณา",
-            "margin" => "lg",
-            "size" => "lg",
-            "color" => "#000000"
           ]
         ]
       ],
