@@ -231,7 +231,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "กรุณาเลือกร้านค้าที่ต้องการจองคิวค่ะ",
+            "text" => "หมายเลขคิวปัจจุบัน",
             "size" => "lg",
             "align" => "start",
             "weight" => "bold",
@@ -270,7 +270,30 @@ $jsonFlex = [
                 "color" => "#000000"
               ]
             ]
+          ],
+          [
+            "type" => "box",
+            "layout" => "baseline",
+            "margin" => "lg",
+            "contents" => [
+              [
+                "type" => "text",
+                "text" => "พื้นที่โฆษณา",
+                "color" => "#C3C3C3"
+              ],
+              [
+                "type" => "text",
+                "text" => "TEST",
+                "align" => "end"
+              ]
+            ]
+          ],
+          [
+            "type" => "separator",
+            "margin" => "lg",
+            "color" => "#C3C3C3"
           ]
+        ]
       ],
       "footer" => [
         "type" => "box",
