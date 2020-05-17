@@ -235,7 +235,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   }
    $arrTxt=explode(" ",  $text);
     $text=$arrTxt[0]; 
-    $tel=$arrTxt[1];  
+    $branch_code=$arrTxt[1];  
 
 ///////////////////////////////////////
   if($isUsed=='T')
@@ -245,8 +245,8 @@ if($text== 'ADD_Q' && $permission=='user')
 {
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
-    $replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
-	if($Iselect_B=='T55')
+    //$replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
+	if($branch_code<>'')
 	{
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
 	$addNewQ='F';
