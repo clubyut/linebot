@@ -231,7 +231,7 @@ if($text== 'ADD_Q' && $permission=='user')
 					];
 
 					$messagesX[0] = $messages;
-					$messagesX[2] = $messages;
+					$messagesX[1] = $messages;
 					_sendOut($access_token, $replyToken, $messagesX);
 
 
