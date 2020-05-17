@@ -230,8 +230,7 @@ $jsonFlex = [
         "layout" => "vertical",
         "contents" => [
           [
-            "type" => "button",
-            "label" => "หมายเลขคิวปัจจุบัน",
+            "type" => "text",
             "text" => "หมายเลขคิวปัจจุบัน",
             "size" => "lg",
             "align" => "start",
