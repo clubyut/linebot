@@ -209,45 +209,160 @@ if($text== 'ADD_Q' && $permission=='user')
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
 // ทำการเลือก Branch
-	$messagesX = array(2);
-	$jtext="jtext";
-	$resp="resp";				
-					$resp = "กรุณาเลือกร้านที่ต้องการจองคิว";
-					$messages = [
-						'type' => 'text',
-						'text' => $resp,
-						'quickReply' => [
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'message',
-										'label' => 'ร้านที่ 1',
-										'text' => 'Branch 1'
-									]
-								]
-							]
-						]
-					];
-					$messagesDelReq = [
-							'type' => 'text',
-							'text' => 'หากต้องการรับเอกสารใหม่ให้กดที่ ลบรูปถ่าย ',
-							'quickReply' => [
-								'items' => [
-									[
-										'type' => 'action',
-										'action' => [
-											'type' => 'message',
-											'label' => 'ลบรูปถ่าย',
-											'text' => 'DE:'
-										]
-									]
-								]
-							]
-						];
-					$messagesX[0] = $messages;
-					$messagesX[1] = $messagesDelReq;
-					_sendOut($access_token, $replyToken, $messagesX);
+$API_URL = 'https://api.line.me/v2/bot/message';
+$ACCESS_TOKEN = $access_token; 
+$channelSecret = 'f9629f9dedd8637ddd1ff39c02ca9ae1';
+
+
+$POST_HEADER = array('Content-Type: application/json', 'Authorization: Bearer ' . $ACCESS_TOKEN);
+
+$request = file_get_contents('php://input');   // Get request content
+$request_array = json_decode($request, true);   // Decode JSON to Array
+
+$jsonFlex = [
+    "type" => "flex",
+    "altText" => "Hello Flex Message",
+    "contents" => [
+      "type" => "bubble",
+      "direction" => "ltr",
+      "header" => [
+        "type" => "box",
+        "layout" => "vertical",
+        "contents" => [
+          [
+            "type" => "button",
+            "label" => "หมายเลขคิวปัจจุบัน",
+            "text" => "หมายเลขคิวปัจจุบัน",
+            "size" => "lg",
+            "align" => "start",
+            "weight" => "bold",
+            "color" => "#009813"
+          ],
+          [
+            "type" => "text",
+            "text" => "        ".$qNo,
+            "size" => "4xl",
+            "weight" => "bold",
+            "color" => "#000000"
+          ],
+          [
+            "type" => "text",
+            "text" => "พื้นที่โฆษณา",
+            "size" => "lg",
+            "weight" => "bold",
+            "color" => "#000000"
+          ],
+          [
+            "type" => "text",
+            "text" => "พื้นที่โฆษณา",
+            "size" => "xs",
+            "color" => "#B2B2B2"
+          ],
+          [
+            "type" => "text",
+            "text" => "พื้นที่โฆษณา",
+            "margin" => "lg",
+            "size" => "lg",
+            "color" => "#000000"
+          ]
+        ]
+      ],
+      "body" => [
+        "type" => "box",
+        "layout" => "vertical",
+        "contents" => [
+          [
+            "type" => "separator",
+            "color" => "#C3C3C3"
+          ],
+          [
+            "type" => "box",
+            "layout" => "baseline",
+            "margin" => "lg",
+            "contents" => [
+              [
+                "type" => "text",
+                "text" => "พื้นที่โฆษณา",
+                "align" => "start",
+                "color" => "#C3C3C3"
+              ],
+              [
+                "type" => "text",
+                "text" => "TEST",
+                "align" => "end",
+                "color" => "#000000"
+              ]
+            ]
+          ],
+          [
+            "type" => "box",
+            "layout" => "baseline",
+            "margin" => "lg",
+            "contents" => [
+              [
+                "type" => "text",
+                "text" => "พื้นที่โฆษณา",
+                "color" => "#C3C3C3"
+              ],
+              [
+                "type" => "text",
+                "text" => "TEST",
+                "align" => "end"
+              ]
+            ]
+          ],
+          [
+            "type" => "separator",
+            "margin" => "lg",
+            "color" => "#C3C3C3"
+          ]
+        ]
+      ],
+      "footer" => [
+        "type" => "box",
+        "layout" => "horizontal",
+        "contents" => [
+          [
+            "type" => "text",
+            "text" => "ลิ้งพื้นที่โฆษณา",
+            "size" => "lg",
+            "align" => "start",
+            "color" => "#0084B6",
+            "action" => [
+              "type" => "uri",
+              "label" => "View Details",
+              "uri" => "https://google.co.th/"
+            ]
+          ]
+        ]
+      ]
+    ]
+  ];
+
+
+
+if ( sizeof($request_array['events']) > 0 ) {
+    foreach ($request_array['events'] as $event) {
+        error_log(json_encode($event));
+        $reply_message = '';
+        $reply_token = $event['replyToken'];
+
+
+        $data = [
+            'replyToken' => $reply_token,
+            'messages' => [$jsonFlex]
+        ];
+
+        print_r($data);
+
+        $post_body = json_encode($data, JSON_UNESCAPED_UNICODE);
+
+        $send_result = send_reply_message($API_URL.'/reply', $POST_HEADER, $post_body);
+
+        echo "Result: ".$send_result."\r\n";
+        
+    }
+}
 
 
 
