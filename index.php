@@ -280,8 +280,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
     $qNo =$qNo +1;
   }
 
-	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code')");
+	
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
   	//
@@ -289,7 +288,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
  	////// รอคิว
  	  $qNo = 0;
       $name = '';
- 	$getQno = $mysql->query("SELECT u_id,name,q_no FROM add_q where branch_no=$branchNo AND u_id='$userID' and status ='wait'");
+ 	$getQno = $mysql->query("SELECT u_id,name,q_no FROM add_q where branch_no='$branch_code' AND u_id='$userID' and status ='wait'");
     $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       //
