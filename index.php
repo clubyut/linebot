@@ -1,7 +1,7 @@
 <?php
 //mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
 //$branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?id=1
-$branchNo = 1;
+$branchNo = '111';
  $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
@@ -193,21 +193,14 @@ function pushMsg($arrayHeader,$arrayPostData){
  //ADD_Q
 $replyText["type"] = "text";
 $isUsed='T';
-$permission='user';
-//// ตรวจสอบการลงทะเบียน
-$Arrtext="111111";
-$name="99999";
-$tel="55555";
 ///// ADD PERMISSTION
-
+$permission='user';
 $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
-      
-		
-  	  			$isUsed='F';
-      			$replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ $name $tel";
-			
+      //ยังไม่เคยลงทะเบียน
+  	  $isUsed='F';
+      $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
 
   } else {
     while($row = $getQno->fetch_assoc()){
@@ -448,8 +441,10 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
   	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
-}///////// END  IF Isused
-
+}else
+{///////// END  IF Isused
+	$replyText["text"] = "ลงทะเบียนครั้งแรกกรอก$isUsed";
+}
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
 
