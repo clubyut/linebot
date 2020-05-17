@@ -209,11 +209,10 @@ if($text== 'ADD_Q' && $permission=='user')
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
 // ทำการเลือก Branch
-	$messagesX = array(1);
+	$messagesX = array(2);
 	$jtext="jtext";
 	$resp="resp";				
 					$resp = "กรุณาเลือกร้านที่ต้องการจองคิว";
-					$messagesA=array(2);
 					$messages = [
 						'type' => 'text',
 						'text' => $resp,
@@ -230,9 +229,24 @@ if($text== 'ADD_Q' && $permission=='user')
 							]
 						]
 					];
-                    $messagesA[0]=$messages;
-                    $messagesA[1]=$messages;
-					$messagesX[0] = $messagesA;
+					$messagesDelReq = [
+							'type' => 'text',
+							'text' => 'หากต้องการรับเอกสารใหม่ให้กดที่ ลบรูปถ่าย ',
+							'quickReply' => [
+								'items' => [
+									[
+										'type' => 'action',
+										'action' => [
+											'type' => 'message',
+											'label' => 'ลบรูปถ่าย',
+											'text' => 'DE:'
+										]
+									]
+								]
+							]
+						];
+					$messagesX[0] = $messages;
+					$messagesX[1] = $messagesDelReq;
 					_sendOut($access_token, $replyToken, $messagesX);
 
 
