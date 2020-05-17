@@ -253,16 +253,17 @@ $jsonFlex = [
             "margin" => "lg",
             "contents" => [
               [
-                "type" => "button",
-                "style" => "primary",
-                "text" => "พื้นที่โฆษณา",
-                "color" => "#009813",
-                "action" => [
-              	"type" => "message",
-              	"label" => "มัธยมศึกษาปีที่ 1",
-              	"text" => "Teerayut"
-                  ]
-              ],
+            "type" => "text",
+            "text" => "ลิ้งพื้นที่โฆษณา",
+            "size" => "lg",
+            "align" => "start",
+            "color" => "#0084B6",
+            "action" => [
+              "type" => "uri",
+              "label" => "View Details",
+              "uri" => "https://google.co.th/"
+            ]
+          ],
               [
                 "type" => "text",
                 "text" => "TEST",
