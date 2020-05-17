@@ -212,11 +212,31 @@ if($text== 'ADD_Q' && $permission=='user')
 	$messagesX = array(1);
 	$jtext="jtext";
 	$resp="resp";				
-					$resp = "ทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
+					$resp = "กรุณาเลือกร้านที่ต้องการจองคิว";
 					$messages = [
 						'type' => 'text',
 						'text' => $resp,
 						'quickReply' => [
+							'items' => [
+								[
+									'type' => 'action',
+									'action' => [
+										'type' => 'message',
+										'label' => 'ร้านที่ 1',
+										'text' => 'Branch 1'
+									]
+								]
+							],
+							'items' => [
+								[
+									'type' => 'action',
+									'action' => [
+										'type' => 'message',
+										'label' => 'ร้านที่ 1',
+										'text' => 'Branch 1'
+									]
+								]
+							],
 							'items' => [
 								[
 									'type' => 'action',
