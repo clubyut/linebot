@@ -231,7 +231,7 @@ $jsonFlex = [
         "contents" => [
           [
             "type" => "text",
-            "text" => "กรุณาเลือกร้านค้าที่ต้องการจองคิวค่ะ",
+            "text" => "เลือกร้านค้าที่ต้องการจองคิวค่ะ",
             "size" => "lg",
             "align" => "start",
             "weight" => "bold",
@@ -249,26 +249,7 @@ $jsonFlex = [
           ],
           [
             "type" => "box",
-            "layout" => "baseline",
-            "margin" => "lg",
-            "contents" => [
-              [
-                "type" => "text",
-                "text" => "พื้นที่โฆษณา",
-                "align" => "start",
-                "color" => "#C3C3C3"
-              ],
-              [
-                "type" => "text",
-                "text" => "TEST",
-                "align" => "end",
-                "color" => "#000000"
-              ]
-            ]
-          ],
-          [
-            "type" => "box",
-            "layout" => "baseline",
+            "layout" => "vertical",
             "margin" => "lg",
             "contents" => [
               [
