@@ -195,9 +195,9 @@ $replyText["type"] = "text";
 $isUsed='T';
 $permission='user';
 //// ตรวจสอบการลงทะเบียน
-$Arrtext=explode (" ", $text);
-$name=$Arrtext[0];
-$tel='5555';
+$Arrtext="111111";
+$name="99999";
+$tel="55555";
 ///// ADD PERMISSTION
 
 $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
