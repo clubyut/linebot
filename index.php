@@ -226,24 +226,16 @@ if($text== 'ADD_Q' && $permission=='user')
 										'text' => 'Branch 1'
 									]
 								]
-							],
+							]
+						],
+						'quickReply' => [
 							'items' => [
 								[
 									'type' => 'action',
 									'action' => [
 										'type' => 'message',
-										'label' => 'ร้านที่ 1',
-										'text' => 'Branch 1'
-									]
-								]
-							],
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'message',
-										'label' => 'ร้านที่ 1',
-										'text' => 'Branch 1'
+										'label' => 'ร้านที่ 2',
+										'text' => 'Branch 2'
 									]
 								]
 							]
