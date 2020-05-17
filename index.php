@@ -208,6 +208,34 @@ if($text== 'ADD_Q' && $permission=='user')
 {
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
+// ทำการเลือก Branch
+	$messagesX = array(1);
+	$jtext="jtext";
+	$resp="resp";				
+					$resp = "ทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
+					$messages = [
+						'type' => 'text',
+						'text' => $resp,
+						'quickReply' => [
+							'items' => [
+								[
+									'type' => 'action',
+									'action' => [
+										'type' => 'camera',
+										'label' => 'Camera'
+									]
+								]
+							]
+						]
+					];
+
+					$messagesX[0] = $messages;
+					_sendOut($access_token, $replyToken, $messagesX);
+
+
+
+
+	
 	if($Iselect_B=='T')
 	{
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
