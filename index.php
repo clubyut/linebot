@@ -209,7 +209,7 @@ if($text== 'ADD_Q' && $permission=='user')
 	$Iselect_B='F';
 	////// ทำการเลือก Branch 
 // ทำการเลือก Branch
-	$messagesX = array(1);
+	$messagesX = array(2);
 	$jtext="jtext";
 	$resp="resp";				
 					$resp = "กรุณาเลือกร้านที่ต้องการจองคิว";
@@ -228,24 +228,10 @@ if($text== 'ADD_Q' && $permission=='user')
 								]
 							]
 						]
-					],[
-						'type' => 'text',
-						'text' => $resp,
-						'quickReply' => [
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'message',
-										'label' => 'ร้านที่ 2',
-										'text' => 'Branch 2'
-									]
-								]
-							]
-						]
 					];
 
 					$messagesX[0] = $messages;
+					$messagesX[2] = $messages;
 					_sendOut($access_token, $replyToken, $messagesX);
 
 
