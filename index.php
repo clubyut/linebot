@@ -253,7 +253,7 @@ $jsonFlex = [
             "margin" => "lg",
             "contents" => [
               [
-            "type" => "text",
+            "type" => "button",
             "text" => "ลิ้งพื้นที่โฆษณา",
             "size" => "lg",
             "align" => "start",
