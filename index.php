@@ -233,10 +233,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
       $permission=$row['permission'];
     }
   }
-    $arrTxt=explode(" ",  $text);
-    $text=$arrTxt[0]; 
-    $branch_code=$arrTxt[1]; 
-    $replyText["text"] = "หมายเลขคิวของคุณ $text คือ $branch_code ค่ะ";
+    
 ///////////////////////////////////////
   if($isUsed=='T55')
   {
