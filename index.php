@@ -201,10 +201,14 @@ $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles whe
   if ( $getNum == "0"){
       //ยังไม่เคยลงทะเบียน
   	$arrTxt=explode(" ",  $text);
-    $x1=$arrTxt[0]; 
-    $x2=$arrTxt[1]; 
+    $name=$arrTxt[0]; 
+    $tel=$arrTxt[1]; 
   	  $isUsed='F';
-      $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ $x1 และ $x2 และ $text";
+      $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ $name และ $tel และ $text";
+      if($tel=='')
+      {
+      	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ 5555";
+      }
 
   } else {
     while($row = $getQno->fetch_assoc()){
