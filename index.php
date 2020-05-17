@@ -210,6 +210,20 @@ $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles whe
       	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
       }else
       {
+      	$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $access_token;
+$results = getLINEProfile($LINEDatas);
+$profileText = implode("", $results);
+$str_arr = explode (",", $profileText); 
+$x1=explode (":", $str_arr[1]); 
+$x2=explode (":", $str_arr[2]); 
+$permission='user';
+$displayName=str_replace("\"", "", $x1[1]);
+$pictureUrl=str_replace("\"", "", $x2[1]);
+$statusMessage=$results['statusMessage'];
+$email=$results["E"][0]["displayName"];
+  	//Insert User Profile
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
       	$replyText["text"] = "คุณ $name หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
       }
 
