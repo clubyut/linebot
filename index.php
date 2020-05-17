@@ -346,7 +346,7 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
 	$messagesX = array(1);
 	$jtext="jtext";
 	$resp="resp";				
-					$resp = $row["Detail"] . " และทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
+					$resp = "ทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
 					$messages = [
 						'type' => 'text',
 						'text' => $resp,
