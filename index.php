@@ -221,8 +221,9 @@ if($text== 'ADD_Q' && $permission=='user')
 								[
 									'type' => 'action',
 									'action' => [
-										'type' => 'camera',
-										'label' => 'Camera'
+										'type' => 'message',
+										'label' => 'ร้านที่ 1',
+										'text' => 'Branch 1'
 									]
 								]
 							]
@@ -235,7 +236,7 @@ if($text== 'ADD_Q' && $permission=='user')
 
 
 
-	
+
 	if($Iselect_B=='T')
 	{
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
