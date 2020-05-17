@@ -1,7 +1,7 @@
 <?php
 //mysql://b79cc14ad249eb:76b0ba67@us-cdbr-iron-east-01.cleardb.net/heroku_9899d38b5c56894?reconnect=true
 //$branchNo = $_GET['id'];//Get ID Branch https://firstbitlinebot.herokuapp.com/?id=1
-$branchNo = '111';
+$branchNo = 1;
  $servername = "us-cdbr-iron-east-01.cleardb.net";
   $username = "b79cc14ad249eb";
   $password = "76b0ba67";
@@ -233,7 +233,9 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
       $permission=$row['permission'];
     }
   }
-
+    $arrTxt=explode(" ",  $text);
+    $text=$arrTxt[0]; 
+    $branch_code=$arrTxt[1]; 
 ///////////////////////////////////////
   if($isUsed=='T')
   {
@@ -247,7 +249,7 @@ if($text== 'ADD_Q' && $permission=='user')
 	{
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
 	$addNewQ='F';
-    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_no=$branchNo AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_no=$branchNo)");
+    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code=$branch_code AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code=$branch_code)");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $addNewQ='T';
@@ -267,7 +269,7 @@ $x1=explode (":", $str_arr[1]);
 $displayName=str_replace("\"", "", $x1[1]);
 $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
-  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_no=$branchNo");
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_code=$branch_code");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo=1;
@@ -279,7 +281,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
 
 	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
   	//
