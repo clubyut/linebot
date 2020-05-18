@@ -235,6 +235,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
       $permission=$row['permission'];
       $name=$row['name']; 
       $tel=$row['tel']; 
+      //$START_Q=$row['START_Q'];
     }
   }
     $arrTxt=explode(" ",  $text);
@@ -242,15 +243,33 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     $branch_code=$arrTxt[1];  
 
 ///////////////////////////////////////
+    //$START_Q   1=เปิดรับ Q , 2 =PAUSE_Q ,3 = STOP_Q 
   if($isUsed=='T')
   {
-       
+       ////Get Branch Code
+  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
+
+           $START_Q=0;
+           $replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
+
 if($text== 'ADD_Q' && $permission=='user')
 {
 	////// ทำการเลือก Branch 
     //$replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
 	if($branch_code<>'')
 	{
+
+
+      
+  if($START_Q==1)
+  {
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
 	$addNewQ='F';
     $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code='$branch_code' AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code')");
@@ -305,7 +324,16 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
  	$replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดปุ่มตัวเลือก และยกเลิกคิวก่อนนะค่ะ";
  }
- 
+ }elseif ($START_Q==2) {
+ 	//PAUSE_Q
+ 	$replyText["text"] = "ขออภัย ร้านหยุดรับคิวชั่วคราว";
+ }elseif ($START_Q==3) {
+ 	//STOP_Q
+ 	$replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
+ } ////END $START_Q
+
+
+
 }////////////// END ADD_Q
 
 }elseif (($text== 'CLEAR_Q') && $permission =='admin') {
