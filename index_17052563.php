@@ -53,82 +53,82 @@ $access_token = $access_token;
   }
   function getContent($datas)
 {
-	$datasReturn = [];
-	$curl = curl_init();
-	curl_setopt_array($curl, array(
-		CURLOPT_URL => "https://api.line.me/v2/bot/message/" . $datas['messageId'] . "/content",
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_ENCODING => "",
-		CURLOPT_MAXREDIRS => 10,
-		CURLOPT_TIMEOUT => 30,
-		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		CURLOPT_CUSTOMREQUEST => "GET",
-		CURLOPT_POSTFIELDS => "",
-		CURLOPT_HTTPHEADER => array(
-			"Authorization: Bearer " . $datas['token'],
-			"cache-control: no-cache"
-		),
-	));
-	$response = curl_exec($curl);
-	$err = curl_error($curl);
-	curl_close($curl);
+  $datasReturn = [];
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://api.line.me/v2/bot/message/" . $datas['messageId'] . "/content",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_POSTFIELDS => "",
+    CURLOPT_HTTPHEADER => array(
+      "Authorization: Bearer " . $datas['token'],
+      "cache-control: no-cache"
+    ),
+  ));
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  curl_close($curl);
 
-	if ($err) {
-		$datasReturn['result'] = 'E';
-		$datasReturn['message'] = $err;
-	} else {
-		$datasReturn['result'] = 'S';
-		$datasReturn['message'] = 'Success';
-		$datasReturn['response'] = $response;
-	}
+  if ($err) {
+    $datasReturn['result'] = 'E';
+    $datasReturn['message'] = $err;
+  } else {
+    $datasReturn['result'] = 'S';
+    $datasReturn['message'] = 'Success';
+    $datasReturn['response'] = $response;
+  }
 
-	return $datasReturn;
+  return $datasReturn;
 }
 function _sendOut($access_token, $replyToken, $messagesX)
 {
 
-	$url = 'https://api.line.me/v2/bot/message/reply';
+  $url = 'https://api.line.me/v2/bot/message/reply';
 
-	$data = [
+  $data = [
 
-		'replyToken' => $replyToken,
+    'replyToken' => $replyToken,
 
-		'messages' => $messagesX,
+    'messages' => $messagesX,
 
-	];
-
-
-
-	$post = json_encode($data);
-
-	$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
+  ];
 
 
 
+  $post = json_encode($data);
 
-	// $deCode = json_decode($post, true);
-	// file_put_contents('log2.txt', implode("", $data) , FILE_APPEND);
-
-
-	$ch = curl_init($url);
-
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-	$result = curl_exec($ch);
-
-	curl_close($ch);
+  $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
 
 
 
-	echo $result . "\r\n";
+
+  // $deCode = json_decode($post, true);
+  // file_put_contents('log2.txt', implode("", $data) , FILE_APPEND);
+
+
+  $ch = curl_init($url);
+
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+  $result = curl_exec($ch);
+
+  curl_close($ch);
+
+
+
+  echo $result . "\r\n";
 }
 function send_reply_message($url, $post_header, $post_body)
 {
@@ -195,22 +195,23 @@ $replyText["type"] = "text";
 $isUsed='T';
 ///
 ///// ADD PERMISSTION
+$cus_name='';
 $permission='user';
-$getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
+$getQno = $mysql->query("select u_id,branch_no,permission,name,tel from user_profiles where u_id='$userID'");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       //ยังไม่เคยลงทะเบียน
-  	$arrTxt=explode(" ",  $text);
+    $arrTxt=explode(" ",  $text);
     $name=$arrTxt[0]; 
     $tel=$arrTxt[1]; 
-  	  $isUsed='F';
+      $isUsed='F';
       
       if(strlen($tel)<>10)
       {
-      	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+         $replyText["text"] = "กรุณากรอกข้อมูลก่อนเข้ารับบริการ ชื่อ เว้นวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
       }else
       {
-      	$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+        $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
 $profileText = implode("", $results);
@@ -222,18 +223,21 @@ $displayName=str_replace("\"", "", $x1[1]);
 $pictureUrl=str_replace("\"", "", $x2[1]);
 $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
-  	//Insert User Profile
+    //Insert User Profile
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
-      	$replyText["text"] = "คุณ $name หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
+    $cus_name=$name;
+        $replyText["text"] = "คุณ $name หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
       }
 
   } else {
     while($row = $getQno->fetch_assoc()){
       $isUsed='T';
       $permission=$row['permission'];
+      $name=$row['name']; 
+      $tel=$row['tel']; 
     }
   }
-   $arrTxt=explode(" ",  $text);
+    $arrTxt=explode(" ",  $text);
     $text=$arrTxt[0]; 
     $branch_code=$arrTxt[1];  
 
@@ -243,13 +247,12 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
        
 if($text== 'ADD_Q' && $permission=='user')
 {
-	$Iselect_B='F';
-	////// ทำการเลือก Branch 
+  ////// ทำการเลือก Branch 
     //$replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
-	if($branch_code<>'')
-	{
-	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
-	$addNewQ='F';
+  if($branch_code<>'')
+  {
+  //ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
+  $addNewQ='F';
     $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code='$branch_code' AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code')");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
@@ -281,16 +284,16 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
     $qNo =$qNo +1;
   }
 
-	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code')");
+  $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
-     $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
-  	//
+     $replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo ค่ะ";
+    //
  }else{
- 	////// รอคิว
- 	  $qNo = 0;
+  ////// รอคิว
+    $qNo = 0;
       $name = '';
- 	$getQno = $mysql->query("SELECT u_id,name,q_no FROM add_q where branch_no='$branch_code' AND u_id='$userID' and status ='wait'");
+  $getQno = $mysql->query("SELECT u_id,name,q_no FROM add_q where branch_no='$branch_code' AND u_id='$userID' and status ='wait'");
     $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       //
@@ -300,24 +303,24 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
       $name = $row['name'];
     }
   }
- 	$replyText["text"] = "คุณ $name ได้เพิ่มคิวไปแล้วก่อนหน้าคิวเลขที่ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดยกเลิกคิวก่อนนะค่ะ";
+  $replyText["text"] = "คุณ $name ได้เพิ่มคิวไปแล้วก่อนหน้าคิวเลขที่ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดยกเลิกคิวก่อนนะค่ะ";
  }
  
 }////////////// END ADD_Q
 
 }elseif (($text== 'CLEAR_Q') && $permission =='admin') {
-	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
-	$replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
+  $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
+  $replyText["text"] = "เครียร์คิวเรียบร้อยค่ะ";
 }elseif ($text== 'NEXT_Q') {
 
 
 //SELECT AND UPDATE STATUS 
     if($permission=='admin')
     {
-	///////////BEGIN NEXT Q
-	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
-	//UPDATE STATUS Q
-	$getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait' and branch_no=$branchNo");
+  ///////////BEGIN NEXT Q
+  $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+  //UPDATE STATUS Q
+  $getQno = $mysql->query("SELECT MIN(q_no)  as qNO FROM add_q where status ='wait' and branch_no=$branchNo");
     $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $qNo="No Q";
@@ -345,16 +348,16 @@ $getNum = $getMsg->num_rows;
   } else {
     while($row = $getMsg->fetch_assoc()){
       //$qNo = $row['qNO'];
-    	//รับ id ของผู้ใช้
-    	    $name = $row['name'];
-    	    $userQ= $row['q_no'];
-    	    $waitQ=$userQ-$qNo;
-    	    $textMsg="ถึงคิวของคุณ $name แล้วนะคะ";
-     		$id = $row['u_id'];
-         	$arrayPostData['to'] = $id;
-          	$arrayPostData['messages'][0]['type'] = "text";
-          	$arrayPostData['messages'][0]['text'] = $textMsg;
-          	pushMsg($arrayHeader,$arrayPostData);
+      //รับ id ของผู้ใช้
+          $name = $row['name'];
+          $userQ= $row['q_no'];
+          $waitQ=$userQ-$qNo;
+          $textMsg="ถึงคิวของคุณ $name แล้วนะคะ";
+        $id = $row['u_id'];
+          $arrayPostData['to'] = $id;
+            $arrayPostData['messages'][0]['type'] = "text";
+            $arrayPostData['messages'][0]['text'] = $textMsg;
+            pushMsg($arrayHeader,$arrayPostData);
     }
   }
 $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no=$branchNo Order By q_no LIMIT 3");
@@ -364,50 +367,50 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
   } else {
     while($row = $getMsg->fetch_assoc()){
       //$qNo = $row['qNO'];
-    	//รับ id ของผู้ใช้
-    	    $name = $row['name'];
-    	    $userQ= $row['q_no'];
-    	    $waitQ=$userQ-$qNo;
-    	    $textMsg="คิวล่าสุดคือ $qNo คิวของคุณ $name คือ $userQ รออีก $waitQ ค่ะ";
-     		$id = $row['u_id'];
-         	$arrayPostData['to'] = $id;
-          	$arrayPostData['messages'][0]['type'] = "text";
-          	$arrayPostData['messages'][0]['text'] = $textMsg;
-          	pushMsg($arrayHeader,$arrayPostData);
+      //รับ id ของผู้ใช้
+          $name = $row['name'];
+          $userQ= $row['q_no'];
+          $waitQ=$userQ-$qNo;
+          $textMsg="คิวล่าสุดคือ $qNo คิวของคุณ $name คือ $userQ รออีก $waitQ ค่ะ";
+        $id = $row['u_id'];
+          $arrayPostData['to'] = $id;
+            $arrayPostData['messages'][0]['type'] = "text";
+            $arrayPostData['messages'][0]['text'] = $textMsg;
+            pushMsg($arrayHeader,$arrayPostData);
     }
   }
 
 ///// END NEXT Q
 }else
 {
-	// ทำการเลือก Branch
-	$messagesX = array(1);
-	$jtext="jtext";
-	$resp="resp";				
-					$resp = "ทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
-					$messages = [
-						'type' => 'text',
-						'text' => $resp,
-						'quickReply' => [
-							'items' => [
-								[
-									'type' => 'action',
-									'action' => [
-										'type' => 'camera',
-										'label' => 'Camera'
-									]
-								]
-							]
-						]
-					];
+  // ทำการเลือก Branch
+  $messagesX = array(1);
+  $jtext="jtext";
+  $resp="resp";       
+          $resp = "ทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
+          $messages = [
+            'type' => 'text',
+            'text' => $resp,
+            'quickReply' => [
+              'items' => [
+                [
+                  'type' => 'action',
+                  'action' => [
+                    'type' => 'camera',
+                    'label' => 'Camera'
+                  ]
+                ]
+              ]
+            ]
+          ];
 
-					$messagesX[0] = $messages;
-					_sendOut($access_token, $replyToken, $messagesX);
+          $messagesX[0] = $messages;
+          _sendOut($access_token, $replyToken, $messagesX);
 }
 
 
 }elseif ($text== 'CURRENT_Q') {
-	
+  
 
 
 //SELECT AND UPDATE STATUS
@@ -424,7 +427,7 @@ $replyText["text"] = "หมายเลขคิวปัจุบัน $qNo";
 
 }else if($text== 'ADD_USER')
   {
-  	//$userID
+    //$userID
 $LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
 $LINEDatas['token'] = $access_token;
 $results = getLINEProfile($LINEDatas);
@@ -437,16 +440,16 @@ $displayName=str_replace("\"", "", $x1[1]);
 $pictureUrl=str_replace("\"", "", $x2[1]);
 $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
-  	//Insert User Profile
+    //Insert User Profile
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission')");
 
 
   }else if($text== 'B_ADD_Q' && $permission =='admin'){
-	
-	$replyText["text"] = "ป้อนชื่อ และ นามสกุลด้วยนะคะ";
+  
+  $replyText["text"] = "ป้อนชื่อ และ นามสกุลด้วยนะคะ";
   }else if($text <> '' && $permission =='admin' &&( ($text <> 'ADD_Q')&&($text <> 'CURRENT_Q')&&($text <> 'CANCEL_Q') && ($text <> 'NEXT_Q')&& ($text <> 'CLEAR_Q') )){
-	//ADDMIN ADD_Q
-	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+  //ADDMIN ADD_Q
+  $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   //select Max AddQ
   $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_no=$branchNo");
   $getNum = $getQno->num_rows;
@@ -459,15 +462,15 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     $qNo =$qNo +1;
   }
 
-	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
+  $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
     $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`) VALUES ('$userID','$branchNo','$text','$qNo','$replyToken','$qStatus')");
      $replyText["text"] = "หมายเลขคิวของคุณลูกค้า $text คือ $qNo ค่ะ";
-  	//
+    //
   }else if(($text== 'CANCEL_Q') && ($permission =='user'))
   {
-  	//ยกเลิกคิวที่มี status wait
-  	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
-  	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
+    //ยกเลิกคิวที่มี status wait
+    $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
+    $replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
 }///////// END  IF Isused
 
