@@ -300,10 +300,10 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   } else {
     while($row = $getQno->fetch_assoc()){
       $qNo = $row['q_no'];
-      $name = $row['name'];
+      //$name = $row['name'];
     }
   }
- 	$replyText["text"] = "คุณ $name ได้เพิ่มคิวไปแล้วก่อนหน้าคิวเลขที่ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดยกเลิกคิวก่อนนะค่ะ";
+ 	$replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดปุ่มตัวเลือก และยกเลิกคิวก่อนนะค่ะ";
  }
  
 }////////////// END ADD_Q
