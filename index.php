@@ -304,7 +304,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
 
 	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branch_code','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo ค่ะ";
   	//
