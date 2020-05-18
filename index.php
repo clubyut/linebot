@@ -425,13 +425,14 @@ $get = $mysql->query("SELECT b.name,a.branch_code FROM add_q a inner join branch
     	$b_code=$row['branch_code'];;
 	$getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete' and branch_code='$b_code'");
   	$getNum = $getQno->num_rows;
+  	$qNo=0;
   	if ( $getNum == "0"){
       	$qNo="No Q";
       	$tempTxt=$tempTxt."ไม่มีคิวที่จะแสดง";
   		} else {
     			while($row = $getQno->fetch_assoc()){
       			$qNo = $row['qNO'];
-                $tempTxt=$tempTxt."หมายเลขคิวปัจุบัน $qNo";
+                $tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo";
     			}
   				}
     	}
