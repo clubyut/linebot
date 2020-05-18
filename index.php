@@ -442,8 +442,24 @@ $get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no,a.u_id FROM add_q 
     			while($row = $getQno->fetch_assoc()){
       			$qNo = $row['qNO'];
                 //$tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว ";
+                ///////// หา Q ststus cancel 
 
-            $textMsg="หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว ";
+             $get1 = $mysql->query("SELECT count(*) as cancleQ FROM add_q where status ='cancel' and branch_code='$b_code' and q_no>$qNo  and q_no<$a_Qno");
+  $get1 = $get1->num_rows;
+  if ( $get1 == "0"){
+      //
+  } else {
+    while($row = $get1->fetch_assoc()){
+    	    $cancelQ = $row['cancleQ'];
+    }
+  }
+  if($qNo=='')
+  {
+  	$qNo=0;
+  }
+  $allWaitQ=$a_Qno-$cancelQ-$qNo;
+               /////////////////////////////////////////
+            $textMsg="หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก $allWaitQ คิว ";
      		$id = $row['u_id'];
          	$arrayPostData['to'] = $a_id;
           	$arrayPostData['messages'][0]['type'] = "text";
