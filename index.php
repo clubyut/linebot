@@ -195,6 +195,7 @@ $replyText["type"] = "text";
 $isUsed='T';
 ///
 ///// ADD PERMISSTION
+$cus_name='';
 $permission='user';
 $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
   $getNum = $getQno->num_rows;
@@ -207,7 +208,7 @@ $getQno = $mysql->query("select u_id,branch_no,permission from user_profiles whe
       
       if(strlen($tel)<>10)
       {
-      	 $replyText["text"] = "ลงทะเบียนครั้งแรกกรอก ชื่อ เวนวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+      	 $replyText["text"] = "กรุณากรอกข้อมูลก่อนเข้ารับบริการ ชื่อ เว้นวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
       }else
       {
       	$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
@@ -224,6 +225,7 @@ $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
   	//Insert User Profile
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
+		$cus_name=$name;
       	$replyText["text"] = "คุณ $name หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
       }
 
@@ -243,7 +245,6 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
        
 if($text== 'ADD_Q' && $permission=='user')
 {
-	$Iselect_B='F';
 	////// ทำการเลือก Branch 
     //$replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
 	if($branch_code<>'')
@@ -282,9 +283,9 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
 
 	$mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
-     $replyText["text"] = "หมายเลขคิวของคุณ $displayName คือ $qNo ค่ะ";
+     $replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo ค่ะ";
   	//
  }else{
  	////// รอคิว
