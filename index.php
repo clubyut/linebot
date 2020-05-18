@@ -197,7 +197,7 @@ $isUsed='T';
 ///// ADD PERMISSTION
 $cus_name='';
 $permission='user';
-$getQno = $mysql->query("select u_id,branch_no,permission from user_profiles where u_id='$userID'");
+$getQno = $mysql->query("select u_id,branch_no,permission,name,tel from user_profiles where u_id='$userID'");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       //ยังไม่เคยลงทะเบียน
