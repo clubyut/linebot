@@ -233,9 +233,11 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     while($row = $getQno->fetch_assoc()){
       $isUsed='T';
       $permission=$row['permission'];
+      $name=$row['name']; 
+      $tel=$row['tel']; 
     }
   }
-   $arrTxt=explode(" ",  $text);
+    $arrTxt=explode(" ",  $text);
     $text=$arrTxt[0]; 
     $branch_code=$arrTxt[1];  
 
