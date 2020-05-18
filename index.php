@@ -413,7 +413,7 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
 
 }elseif ($text== 'CURRENT_Q') {
 $tempTxt='';
-$get = $mysql->query("SELECT b.name,a.branch_code FROM add_q a inner join branch b on a.branch_code=b.branch_code where u_id='$userID'  AND status='wait'");
+$get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no FROM add_q a inner join branch b on a.branch_code=b.branch_code where u_id='$userID'  AND status='wait'");
   $getNum1 = $get->num_rows;
   if ( $getNum1 == "0"){
       $tempTxt="ไม่มีคิวที่จะแสดง";
@@ -422,7 +422,9 @@ $get = $mysql->query("SELECT b.name,a.branch_code FROM add_q a inner join branch
       //$qNo = $row['qNO'];
     	//SELECT AND UPDATE STATUS
     	$branch_name=$row['name'];
-    	$b_code=$row['branch_code'];;
+    	$b_code=$row['branch_code'];
+    	$name_t=$row['name_t'];
+    	$a_Qno=$row['q_no'];
 	$getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete' and branch_code='$b_code'");
   	$getNum = $getQno->num_rows;
   	$qNo=0;
@@ -432,7 +434,7 @@ $get = $mysql->query("SELECT b.name,a.branch_code FROM add_q a inner join branch
   		} else {
     			while($row = $getQno->fetch_assoc()){
       			$qNo = $row['qNO'];
-                $tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo";
+                $tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว";
     			}
   				}
     	}
