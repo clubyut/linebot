@@ -252,7 +252,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     if ( $getNum == "0"){
 
            $START_Q=0;
-           $replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
     } else {
     while($row = $getQno->fetch_assoc()){
       $START_Q=$row['START_Q'];
