@@ -413,7 +413,13 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
 
 }elseif ($text== 'CURRENT_Q') {
 $tempTxt='';
-$get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no FROM add_q a inner join branch b on a.branch_code=b.branch_code where u_id='$userID'  AND status='wait'");
+   $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
+$get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no,a.u_id FROM add_q a inner join branch b on a.branch_code=b.branch_code where u_id='$userID'  AND status='wait'");
   $getNum1 = $get->num_rows;
   if ( $getNum1 == "0"){
       $tempTxt="ไม่มีคิวที่จะแสดง";
@@ -425,6 +431,7 @@ $get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no FROM add_q a inner
     	$b_code=$row['branch_code'];
     	$name_t=$row['name_t'];
     	$a_Qno=$row['q_no'];
+    	$a_id=$row['u_id'];
 	$getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete' and branch_code='$b_code'");
   	$getNum = $getQno->num_rows;
   	$qNo=0;
@@ -434,14 +441,21 @@ $get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no FROM add_q a inner
   		} else {
     			while($row = $getQno->fetch_assoc()){
       			$qNo = $row['qNO'];
-                $tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว";
+                //$tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว ";
+
+            $textMsg="หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว ";
+     		$id = $row['u_id'];
+         	$arrayPostData['to'] = $a_id;
+          	$arrayPostData['messages'][0]['type'] = "text";
+          	$arrayPostData['messages'][0]['text'] = $textMsg;
+          	pushMsg($arrayHeader,$arrayPostData);
     			}
   				}
     	}
   }
 
 
-$replyText["text"] = $tempTxt;//"หมายเลขคิวปัจุบัน $qNo";
+//$replyText["text"] = $tempTxt;//"หมายเลขคิวปัจุบัน $qNo";
    ///// END CURRENT Q
 }else if($text== 'ADD_USER')
   {
