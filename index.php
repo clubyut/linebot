@@ -605,7 +605,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   }else if(($text== 'CANCEL_Q') && ($permission =='user'))
   {
   	//ยกเลิกคิวที่มี status wait
-  	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_code=$branch_code and status ='wait'");
+  	$mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='cancel'  WHERE u_id='$userID' AND branch_code=$branch_code and status ='wait'");
   	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
 }///////// END  IF Isused
