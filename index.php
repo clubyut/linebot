@@ -195,6 +195,7 @@ $replyText["type"] = "text";
 $isUsed='T';
 ///
 ///// ADD PERMISSTION
+$isRegister='F';
 $cus_name='';
 $permission='user';
 $getQno = $mysql->query("select u_id,branch_no,permission,name,tel from user_profiles where u_id='$userID'");
@@ -237,6 +238,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       $permission=$row['permission'];
       $name=$row['name']; 
       $tel=$row['tel']; 
+      $isRegister='T';
       //$START_Q=$row['START_Q'];
     }
   }
@@ -244,9 +246,13 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
     $text=$arrTxt[0]; 
     $branch_code=$arrTxt[1];  
 
+
+    if($isRegister=='T')
+    {
+
     ////SET Branch NO
     // ตรวจสอบ ACTION ก่อนหน้า /////
-
+ 
 		$isUsed='F';
         if($permission=='user')
         {
@@ -609,6 +615,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
 }///////// END  IF Isused
+}///////////END IF isRegister
 
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
