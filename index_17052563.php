@@ -235,6 +235,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
       $permission=$row['permission'];
       $name=$row['name']; 
       $tel=$row['tel']; 
+      //$START_Q=$row['START_Q'];
     }
   }
     $arrTxt=explode(" ",  $text);
@@ -242,14 +243,32 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
     $branch_code=$arrTxt[1];  
 
 ///////////////////////////////////////
+    //$START_Q   1=เปิดรับ Q , 2 =PAUSE_Q ,3 = STOP_Q 
   if($isUsed=='T')
   {
-       
+       ////Get Branch Code
+    $getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
+
+           $START_Q=0;
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
+
 if($text== 'ADD_Q' && $permission=='user')
 {
   ////// ทำการเลือก Branch 
     //$replyText["text"] = "คุณ $text หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ 555";
   if($branch_code<>'')
+  {
+
+
+      
+  if($START_Q==1)
   {
   //ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
   $addNewQ='F';
@@ -285,7 +304,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   }
 
   $mysql->query("INSERT INTO `LOG`(`UserID`, `Text`, `Timestamp`,`image`) VALUES ('$userID','$text','$timestamp','$image')");
-    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branchNo','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branch_code','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
      //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
      $replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo ค่ะ";
     //
@@ -300,12 +319,21 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   } else {
     while($row = $getQno->fetch_assoc()){
       $qNo = $row['q_no'];
-      $name = $row['name'];
+      //$name = $row['name'];
     }
   }
-  $replyText["text"] = "คุณ $name ได้เพิ่มคิวไปแล้วก่อนหน้าคิวเลขที่ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดยกเลิกคิวก่อนนะค่ะ";
+  $replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo หากต้องการเพิ่มคิวใหม่ กรุณากดปุ่มตัวเลือก และยกเลิกคิวก่อนนะค่ะ";
  }
- 
+ }elseif ($START_Q==2) {
+  //PAUSE_Q
+  $replyText["text"] = "ขออภัย ร้านหยุดรับคิวชั่วคราว";
+ }elseif ($START_Q==3) {
+  //STOP_Q
+  $replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
+ } ////END $START_Q
+
+
+
 }////////////// END ADD_Q
 
 }elseif (($text== 'CLEAR_Q') && $permission =='admin') {
@@ -381,50 +409,70 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
   }
 
 ///// END NEXT Q
-}else
-{
-  // ทำการเลือก Branch
-  $messagesX = array(1);
-  $jtext="jtext";
-  $resp="resp";       
-          $resp = "ทำการถ่ายรูปกล่องกลับมาด้วย ของงานเลขที่ = " . $jtext;
-          $messages = [
-            'type' => 'text',
-            'text' => $resp,
-            'quickReply' => [
-              'items' => [
-                [
-                  'type' => 'action',
-                  'action' => [
-                    'type' => 'camera',
-                    'label' => 'Camera'
-                  ]
-                ]
-              ]
-            ]
-          ];
-
-          $messagesX[0] = $messages;
-          _sendOut($access_token, $replyToken, $messagesX);
 }
 
-
 }elseif ($text== 'CURRENT_Q') {
-  
-
-
-//SELECT AND UPDATE STATUS
-$getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete' and branch_no=$branchNo");
-  $getNum = $getQno->num_rows;
-  if ( $getNum == "0"){
-      $qNo="No Q";
+$tempTxt='';
+   $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
+$get = $mysql->query("SELECT b.name,a.branch_code,name_t,q_no,a.u_id FROM add_q a inner join branch b on a.branch_code=b.branch_code where u_id='$userID'  AND status='wait'");
+  $getNum1 = $get->num_rows;
+  if ( $getNum1 == "0"){
+      $tempTxt="ไม่มีคิวที่จะแสดง";
   } else {
-    while($row = $getQno->fetch_assoc()){
-      $qNo = $row['qNO'];
+    while($row = $get->fetch_assoc()){
+      //$qNo = $row['qNO'];
+      //SELECT AND UPDATE STATUS
+      $branch_name=$row['name'];
+      $b_code=$row['branch_code'];
+      $name_t=$row['name_t'];
+      $a_Qno=$row['q_no'];
+      $a_id=$row['u_id'];
+  $getQno = $mysql->query("SELECT MAX(q_no)  as qNO FROM add_q where status ='complete' and branch_code='$b_code'");
+    $getNum = $getQno->num_rows;
+    $qNo=0;
+    if ( $getNum == "0"){
+        $qNo="No Q";
+        $tempTxt=$tempTxt."ไม่มีคิวที่จะแสดง";
+      } else {
+          while($row = $getQno->fetch_assoc()){
+            $qNo = $row['qNO'];
+                //$tempTxt=$tempTxt."หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก [X] คิว ";
+                ///////// หา Q ststus cancel 
+if($qNo=='')
+  {
+    $qNo=0;
+  }
+             $getQ1 = $mysql->query("SELECT count(*) as cancleQ FROM add_q where status ='cancel' and branch_code='$b_code' and q_no>$qNo  and q_no<$a_Qno");
+  $get1 = $getQ1->num_rows;
+  if ( $get1 == "0"){
+      //
+  } else {
+    while($row = $getQ1->fetch_assoc()){
+          $cancelQ = $row['cancleQ'];
     }
   }
-$replyText["text"] = "หมายเลขคิวปัจุบัน $qNo";
+  
+  $allWaitQ=$a_Qno-$cancelQ-$qNo;
+               /////////////////////////////////////////
+            $textMsg="หมายเลขคิวปัจุบัน ร้าน $branch_name คือ $qNo หมายเลขคิวของคุณ $name_t คือ $a_Qno รออีก $allWaitQ คิว ";
+        $id = $row['u_id'];
+          $arrayPostData['to'] = $a_id;
+            $arrayPostData['messages'][0]['type'] = "text";
+            $arrayPostData['messages'][0]['text'] = $textMsg;
+            pushMsg($arrayHeader,$arrayPostData);
+          }
+          }
+      }
+  }
 
+
+//$replyText["text"] = $tempTxt;//"หมายเลขคิวปัจุบัน $qNo";
+   ///// END CURRENT Q
 }else if($text== 'ADD_USER')
   {
     //$userID
