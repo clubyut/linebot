@@ -358,7 +358,7 @@ if($text== 'ADD_Q' && $permission=='user')
   {
 	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
 	$addNewQ='F';
-    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code='$branch_code' AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code')");
+    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code='$branch_code' AND u_id='$userID' and status='wait' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code')");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $addNewQ='T';
