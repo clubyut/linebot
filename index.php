@@ -225,6 +225,8 @@ $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
   	//Insert User Profile
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
+$action='ADD_USER';
+$mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$action')");
 		$cus_name=$name;
       	$replyText["text"] = "คุณ $name หมายเลขโทรศัพท์ $tel ลงทะเบียนเรียบร้อยค่ะ";
       }
