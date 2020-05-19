@@ -279,8 +279,8 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
   								}
 
             			
-                            $tetReturn="ป้อนรหัสร้านไม่ถูกต้องกรุณาป้อนใหม่ค่ะ";
-            				$getBranch = $mysql->query("SELECT ID,name,accessToken FROM  branch WHERE branch_code='$text'");
+                            $replyText["text"]="ป้อนรหัสร้านไม่ถูกต้องกรุณาป้อนใหม่ค่ะ";
+            				$getBranch = $mysql->query("SELECT ID,name,accessToken,branch_code FROM  branch WHERE branch_code='$text'");
   							$getNum = $getBranch->num_rows;
   							if ( $getNum == "0"){
      						         //ป้อน CODE ร้านไม่ถูกต้อง
