@@ -247,7 +247,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
     ////SET Branch NO
     // ตรวจสอบ ACTION ก่อนหน้า /////
 
-		$isUsed='F'
+		$isUsed='F';
         if($permission=='user')
         {
 
