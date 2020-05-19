@@ -247,62 +247,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
     ////SET Branch NO
     // ตรวจสอบ ACTION ก่อนหน้า /////
 
-		$isUsed=='F'
-        if($permission=='user')
-        {
-
-          if ($branch_code=='') {
-          	//ตรวจสอบ TEXT 
-           		 if($text== 'ADD_Q')
-            		{
-            			$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
-            			$replyText["text"] = "ป้อนรหัสร้านที่ต้องการจองคิวค่ะ";
-            		}else if($text== '1')
-            	{
-            			//CANCEL Q
-            			$mysql->query("UPDATE `user_action` SET `action` ='CANCEL'  WHERE u_id='$userID' ");
-            			$replyText["text"] = "ป้อนรหัสร้านที่ต้องการยกเลิกคิวค่ะ";
-            	}else if ($text== 'CURRENT_Q') {
-            		$isUsed=='T';
-            	}else
-            			{
-            				//ตรวจสอบ BRANCH_CODE
-            				
-							$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
-  							$getNum = $getAcc->num_rows;
-  							if ( $getNum == "0"){
-     						         //ป้อน CODE ร้านไม่ถูกต้อง
-  								} else {
-    									while($row =  $getAcc->fetch_assoc()){
-      									$user_action = $row['action'];
-    									}
-  								}
-
-            			
-                            $replyText["text"]="ป้อนรหัสร้านไม่ถูกต้องกรุณาป้อนใหม่ค่ะ";
-            				$getBranch = $mysql->query("SELECT ID,name,accessToken,branch_code FROM  branch WHERE branch_code='$text'");
-  							$getNum = $getBranch->num_rows;
-  							if ( $getNum == "0"){
-     						         //ป้อน CODE ร้านไม่ถูกต้อง
-  								} else {
-    									while($row =  $getBranch->fetch_assoc()){
-      									$branch_code = $row['branch_code'];
-      									$text=$user_action; //Set User Action ใหม่
-      									$isUsed=='T';
-    									}
-  								}
-
-            			}
-          }else
-          {
-          	$isUsed=='T';
-          }
-
-        }else
-        {
-        	//ADMIN
-        	$isUsed=='T';
-        }
+		
 
 
 
