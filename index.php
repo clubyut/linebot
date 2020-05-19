@@ -264,9 +264,11 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
             			$replyText["text"] = "ป้อนรหัสร้านที่ต้องการยกเลิกคิวค่ะ";
             	}else if($text== '2')
             	{
+            		  $mysql->query("UPDATE `user_profiles` SET `lang` ='THI'  WHERE u_id='$userID' ");
                       $replyText["text"] = "LANG = THI แสดงข้อความภาษาไทย";
             	}else if($text== '3')
             	{
+            		  $mysql->query("UPDATE `user_profiles` SET `lang` ='ENG'  WHERE u_id='$userID' ");
             		  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
             	}
             	else if ($text== 'CURRENT_Q') {
@@ -274,7 +276,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
             	}else if($text== 'OPTION')
             	        {
                              $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";
-            	         }
+            	        }
             			else{
             				//ตรวจสอบ BRANCH_CODE
             				
@@ -312,6 +314,16 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
         {
         	//ADMIN
         	$isUsed='T';
+        	//Get Branch_code
+        	$getBranch = $mysql->query("SELECT branch_no FROM  user_profiles WHERE u_id='$userID'");
+  							$getNum = $getBranch->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								} else {
+    									while($row =  $getBranch->fetch_assoc()){
+      									$branch_code = $row['branch_no'];
+    									}
+  								}
         }
 
 
