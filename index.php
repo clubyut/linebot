@@ -224,7 +224,7 @@ $pictureUrl=str_replace("\"", "", $x2[1]);
 $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
   	//Insert User Profile
-$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`,`lang`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel','THI')");
 $action='ADD_USER';
 $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$action')");
 		$cus_name=$name;
@@ -260,12 +260,22 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
             		}else if($text== '1')
             	{
             			//CANCEL Q
-            			$mysql->query("UPDATE `user_action` SET `action` ='CANCEL'  WHERE u_id='$userID' ");
+            			$mysql->query("UPDATE `user_action` SET `action` ='CANCEL_Q'  WHERE u_id='$userID' ");
             			$replyText["text"] = "ป้อนรหัสร้านที่ต้องการยกเลิกคิวค่ะ";
-            	}else if ($text== 'CURRENT_Q') {
+            	}else if($text== '2')
+            	{
+                      $replyText["text"] = "LANG = THI แสดงข้อความภาษาไทย";
+            	}else if($text== '3')
+            	{
+            		  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
+            	}
+            	else if ($text== 'CURRENT_Q') {
             		$isUsed='T';
-            	}else
-            			{
+            	}else if($text== 'OPTION')
+            	        {
+                             $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";
+            	         }
+            			else{
             				//ตรวจสอบ BRANCH_CODE
             				
 							$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
@@ -583,7 +593,7 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   }else if(($text== 'CANCEL_Q') && ($permission =='user'))
   {
   	//ยกเลิกคิวที่มี status wait
-  	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
+  	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_code=$branch_code and status ='wait'");
   	$replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
 }///////// END  IF Isused
