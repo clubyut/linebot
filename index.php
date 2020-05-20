@@ -345,7 +345,23 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
   		    {
   		    	$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
             			$replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
-  		    }else   {
+  		    }else if($text== 'OPTION')
+  		    {
+ 
+                 $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";           	        
+  		    }else if($text== 'CANCEL_Q')
+  		    {
+  		    	//// ไม่ทำงาน
+  		    }else if($text== '2')
+            	{
+            		  $mysql->query("UPDATE `user_profiles` SET `lang` ='THI'  WHERE u_id='$userID' ");
+                      $replyText["text"] = "LANG = THI แสดงข้อความภาษาไทย";
+            	}else if($text== '3')
+            	{
+            		  $mysql->query("UPDATE `user_profiles` SET `lang` ='ENG'  WHERE u_id='$userID' ");
+            		  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
+            	}
+  		    else   {
   		    			$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
   							$getNum = $getAcc->num_rows;
   							if ( $getNum == "0"){
