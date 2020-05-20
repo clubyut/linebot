@@ -252,7 +252,10 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
     }
   }
     $arrTxt=explode(" ",  $text);
+    if(permission=='user')
+    {
     $text=$arrTxt[0]; 
+    }
     $branch_code=$arrTxt[1];  
 
 
@@ -372,7 +375,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       
                                   if(strlen($tel)<>10)
                                     {
-      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ $text";
+      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
                                     }else{
                                     	//// ADD_Q ลุกค้า โดย Admin
 
