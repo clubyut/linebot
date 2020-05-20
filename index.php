@@ -261,18 +261,6 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
 
     if($isRegister=='T')
     {
-       ////Get Branch Code
-  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
-    $getNum = $getQno->num_rows;
-    if ( $getNum == "0"){
-
-           $START_Q=0;
-           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
-    } else {
-    while($row = $getQno->fetch_assoc()){
-      $START_Q=$row['START_Q'];
-    }
-  }
     ////SET Branch NO
     // ตรวจสอบ ACTION ก่อนหน้า /////
  
@@ -375,9 +363,21 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       
                                   if(strlen($tel)<>10)
                                     {
-      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ $START_Q";
+      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
                                     }else{
                                     	//// ADD_Q ลุกค้า โดย Admin
+                                    	  ////Get Branch Code
+  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
+
+           $START_Q=0;
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
 
   if($START_Q==1)
   {
@@ -437,7 +437,18 @@ if($text== 'ADD_Q' && $permission=='user')
 	if($branch_code<>'')
 	{
 
+  ////Get Branch Code
+  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
 
+           $START_Q=0;
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
       
   if($START_Q==1)
   {
