@@ -372,7 +372,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       
                                   if(strlen($tel)<>10)
                                     {
-      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
+      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ $tel";
                                     }else{
                                     	//// ADD_Q ลุกค้า โดย Admin
 
@@ -413,7 +413,7 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
  	$replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
  } ////END $START_Q
                                     }
-  								}
+  								} //// END IF ADD_Q
 
   		    		}
 
