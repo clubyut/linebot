@@ -349,7 +349,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
   		    {
  
                  $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";           	        
-  		    }else if($text== 'CANCEL_Q')
+  		    }else if($text== '1')
   		    {
   		    	//// ไม่ทำงาน
   		    }else if($text== '2')
@@ -360,6 +360,45 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
             	{
             		  $mysql->query("UPDATE `user_profiles` SET `lang` ='ENG'  WHERE u_id='$userID' ");
             		  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
+            	}else if($text== 'CURRENT_Q')
+            	{
+
+
+					$getAcc= $mysql->query("select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code'");
+  							$getNum = $getAcc->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								} else {
+    									while($row =  $getAcc->fetch_assoc()){
+      									$CurrentQ = $row['q_no'];
+    									}
+  								}
+
+$getAcc= $mysql->query("select IFNULL(max(q_no),0) AS q_no from add_q  where status='wait'  and branch_code='$branch_code'");
+  							$getNum = $getAcc->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								} else {
+    									while($row =  $getAcc->fetch_assoc()){
+      									$LastQ = $row['q_no'];
+    									}
+  								}
+
+$getQ1 = $mysql->query("SELECT count(*) as cancleQ FROM add_q where status ='cancel' and branch_code='$branch_code' and q_no>$CurrentQ  and q_no<$LastQ");
+  $get1 = $getQ1->num_rows;
+  if ( $get1 == "0"){
+      //
+  } else {
+    while($row = $getQ1->fetch_assoc()){
+    	    $cancelQ = $row['cancleQ'];
+    }
+  }
+  
+  $allWaitQ=$CurrentQ-$cancelQ-$LastQ;
+
+ $replyText["text"] = "หมายเลขคิวปัจจุบันคือ $CurrentQ หมายเลขคิวสุดท้ายคือ $LastQ รออยู่ $allWaitQ คิว";
+
+
             	}
   		    else   {
   		    			$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
