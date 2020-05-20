@@ -399,6 +399,93 @@ $getQ1 = $mysql->query("SELECT count(*) as cancleQ FROM add_q where status ='can
  $replyText["text"] = "หมายเลขคิวปัจจุบันคือ $CurrentQ หมายเลขคิวสุดท้ายคือ $LastQ รออยู่ $allWaitQ คิว";
 
 
+            	}else if($text== 'NEXT_Q')
+            	{
+
+
+///////////BEGIN NEXT Q
+	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+	//UPDATE STATUS Q
+	$getQno = $mysql->query("SELECT IFNULL(MIN(q_no),0) as qNO FROM add_q where status ='wait' and branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo="No Q";
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['qNO'];
+    }
+  }
+$mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='complete'  WHERE q_no='$qNo' and branch_code='$branch_code'");
+
+$getAcc= $mysql->query("select name,name_t,tel from add_q   WHERE q_no='$qNo' and branch_code='$branch_code'");
+  							$getNum = $getAcc->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								} else {
+    									while($row =  $getAcc->fetch_assoc()){
+      									$Aname = $row['name'];
+      									$Aname_t = $row['name_t'];
+      									$Atel = $row['tel'];
+    									}
+  								}
+
+$replyText["text"] = "คิวที่ $qNo จาก $Aname ชื่อ $Aname_t เบอร์โทร $Atel";
+
+//ตรวจสอบถ้าเป็นคิว Admin ผู้ ADD จะไม่ push message แจ้งคิว wait 
+//Push Message Queue
+$accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
+   //Display Current Q
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where  branch_no='$branch_code' and q_no='$qNo'");
+$getNum = $getMsg->num_rows;
+  if ( $getNum == "0"){
+      //$qNo="No Q";
+  } else {
+    while($row = $getMsg->fetch_assoc()){
+      //$qNo = $row['qNO'];
+    	//รับ id ของผู้ใช้
+    	    $name = $row['name'];
+    	    $userQ= $row['q_no'];
+    	    $waitQ=$userQ-$qNo;
+    	    $textMsg="ถึงคิวที่ $userQ ของคุณแล้ว";
+     		$id = $row['u_id'];
+         	$arrayPostData['to'] = $id;
+          	$arrayPostData['messages'][0]['type'] = "text";
+          	$arrayPostData['messages'][0]['text'] = $textMsg;
+          	if($id<>$userID)
+          	{
+          	pushMsg($arrayHeader,$arrayPostData);
+            }
+    }
+  }
+$getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where status='wait' and branch_no='$branch_code' Order By q_no LIMIT 3");
+  $getNum = $getMsg->num_rows;
+  if ( $getNum == "0"){
+      //$qNo="No Q";
+  } else {
+    while($row = $getMsg->fetch_assoc()){
+      //$qNo = $row['qNO'];
+    	//รับ id ของผู้ใช้
+    	    $name = $row['name'];
+    	    $userQ= $row['q_no'];
+    	    $waitQ=$userQ-$qNo;
+    	    $textMsg="คิวล่าสุดคือ $qNo รออีก $waitQ คิว";
+     		$id = $row['u_id'];
+         	$arrayPostData['to'] = $id;
+          	$arrayPostData['messages'][0]['type'] = "text";
+          	$arrayPostData['messages'][0]['text'] = $textMsg;
+          	if($id<>$userID)
+          	{
+          	pushMsg($arrayHeader,$arrayPostData);
+            }
+    }
+  }
+
+///// END NEXT Q
             	}
   		    else   {
   		    			$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
