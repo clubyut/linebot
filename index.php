@@ -328,7 +328,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
         }else
         {
         	//ADMIN
-        	$isUsed='T';
+        	$isUsed='F';
         	//Get Branch_code
         	$getBranch = $mysql->query("SELECT branch_no FROM  user_profiles WHERE u_id='$userID'");
   							$getNum = $getBranch->num_rows;
@@ -339,6 +339,11 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       									$branch_code = $row['branch_no'];
     									}
   								}
+  		    if($text== 'ADD_Q')
+  		    {
+  		    	$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
+            			$replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
+  		    }
         }
 
 
@@ -595,9 +600,11 @@ $email=$results["E"][0]["displayName"];
 $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission')");
 
 
-  }else if($text== 'B_ADD_Q' && $permission =='admin'){
+  }else if($text== 'ADD_Q' && $permission =='admin'){
 	
-	$replyText["text"] = "ป้อนชื่อ และ นามสกุลด้วยนะคะ";
+	$replyText["text"] = "กรุณากรอกข้อมูลก่อนเข้ารับบริการ ชื่อ เว้นวรรค ตามด้วยเบอร์โทรด้วยค่ะ";
+
+
   }else if($text <> '' && $permission =='admin' &&( ($text <> 'ADD_Q')&&($text <> 'CURRENT_Q')&&($text <> 'CANCEL_Q') && ($text <> 'NEXT_Q')&& ($text <> 'CLEAR_Q') )){
 	//ADDMIN ADD_Q
 	$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
