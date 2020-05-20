@@ -258,7 +258,18 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
 
     if($isRegister=='T')
     {
+       ////Get Branch Code
+  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
 
+           $START_Q=0;
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
     ////SET Branch NO
     // ตรวจสอบ ACTION ก่อนหน้า /////
  
@@ -343,7 +354,70 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
   		    {
   		    	$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
             			$replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
-  		    }
+  		    }else   {
+  		    			$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
+  							$getNum = $getAcc->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								} else {
+    									while($row =  $getAcc->fetch_assoc()){
+      									$user_action = $row['action'];
+    									}
+  								}
+  								if($user_action=='ADD_Q')
+  								{
+  									$arrTxt=explode(" ",  $text);
+   								    $name=$arrTxt[0]; 
+                                    $tel=$arrTxt[1]; 
+      
+                                  if(strlen($tel)<>10)
+                                    {
+      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
+                                    }else{
+                                    	//// ADD_Q ลุกค้า โดย Admin
+
+  if($START_Q==1)
+  {
+	//ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
+   //$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`");  
+$LINEDatas['url'] = "https://api.line.me/v2/bot/profile/".$userID;
+$LINEDatas['token'] = $access_token;
+$results = getLINEProfile($LINEDatas);
+$profileText = implode("", $results);
+$str_arr = explode (",", $profileText); 
+$x1=explode (":", $str_arr[1]);  
+//$displayName=$x1[1];
+$displayName=str_replace("\"", "", $x1[1]);
+$mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
+  //select Max AddQ
+  $getQno = $mysql->query("select MAX(q_no) As q_no from add_q  WHERE  branch_code='$branch_code'");
+  $getNum = $getQno->num_rows;
+  if ( $getNum == "0"){
+      $qNo=1;
+  } else {
+    while($row = $getQno->fetch_assoc()){
+      $qNo = $row['q_no'];
+    }
+    $qNo =$qNo +1;
+  }
+
+    $mysql->query("INSERT INTO `add_q`(`u_id`, `branch_no`, `name`,`q_no`,`reply_token`,`status`,`branch_code`,`name_t`,`tel`) VALUES ('$userID','$branch_code','$displayName','$qNo','$replyToken','$qStatus','$branch_code','$name','$tel')");
+     //$replyText["text"] = "หมายเลขคิวของคุณ $text คือ $qNo ค่ะ";
+     $replyText["text"] = "หมายเลขคิวของคุณ $name คือ $qNo ค่ะ";
+  	//
+}elseif ($START_Q==2) {
+ 	//PAUSE_Q
+ 	$replyText["text"] = "ขออภัย ร้านหยุดรับคิวชั่วคราว";
+ }elseif ($START_Q==3) {
+ 	//STOP_Q
+ 	$replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
+ } ////END $START_Q
+                                    }
+  								}
+
+  		    		}
+
+
         }
 
 
@@ -352,18 +426,6 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
     //$START_Q   1=เปิดรับ Q , 2 =PAUSE_Q ,3 = STOP_Q 
   if($isUsed=='T')
   {
-       ////Get Branch Code
-  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
-    $getNum = $getQno->num_rows;
-    if ( $getNum == "0"){
-
-           $START_Q=0;
-           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
-    } else {
-    while($row = $getQno->fetch_assoc()){
-      $START_Q=$row['START_Q'];
-    }
-  }
 
 if($text== 'ADD_Q' && $permission=='user')
 {
