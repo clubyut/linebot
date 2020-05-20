@@ -394,7 +394,7 @@ $getQ1 = $mysql->query("SELECT count(*) as cancleQ FROM add_q where status ='can
     }
   }
   
-  $allWaitQ=$CurrentQ-$cancelQ-$LastQ;
+  $allWaitQ=$LastQ-$CurrentQ-$cancelQ;
 
  $replyText["text"] = "หมายเลขคิวปัจจุบันคือ $CurrentQ หมายเลขคิวสุดท้ายคือ $LastQ รออยู่ $allWaitQ คิว";
 
