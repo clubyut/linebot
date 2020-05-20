@@ -195,6 +195,7 @@ $replyText["type"] = "text";
 $isUsed='T';
 ///
 ///// ADD PERMISSTION
+$isRegister='F';
 $cus_name='';
 $permission='user';
 $getQno = $mysql->query("select u_id,branch_no,permission,name,tel from user_profiles where u_id='$userID'");
@@ -224,7 +225,7 @@ $pictureUrl=str_replace("\"", "", $x2[1]);
 $statusMessage=$results['statusMessage'];
 $email=$results["E"][0]["displayName"];
     //Insert User Profile
-//$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`//)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel')");
+$mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pictureUrl`,`statusMessage`,`email`,`permission`,`name`,`tel`,`lang`)VALUES('$userID','$branchNo','$displayName','$pictureUrl','$profileText','$email','$permission','$name','$tel','THI')");
 $action='ADD_USER';
 $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$action')");
     $cus_name=$name;
@@ -237,12 +238,101 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       $permission=$row['permission'];
       $name=$row['name']; 
       $tel=$row['tel']; 
+      $isRegister='T';
       //$START_Q=$row['START_Q'];
     }
   }
     $arrTxt=explode(" ",  $text);
     $text=$arrTxt[0]; 
     $branch_code=$arrTxt[1];  
+
+
+    if($isRegister=='T')
+    {
+
+    ////SET Branch NO
+    // ตรวจสอบ ACTION ก่อนหน้า /////
+ 
+    $isUsed='F';
+        if($permission=='user')
+        {
+
+          if ($branch_code=='') {
+            //ตรวจสอบ TEXT 
+               if($text== 'ADD_Q')
+                {
+                  $mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
+                  $replyText["text"] = "ป้อนรหัสร้านที่ต้องการจองคิวค่ะ";
+                }else if($text== '1')
+              {
+                  //CANCEL Q
+                  $mysql->query("UPDATE `user_action` SET `action` ='CANCEL_Q'  WHERE u_id='$userID' ");
+                  $replyText["text"] = "ป้อนรหัสร้านที่ต้องการยกเลิกคิวค่ะ";
+              }else if($text== '2')
+              {
+                  $mysql->query("UPDATE `user_profiles` SET `lang` ='THI'  WHERE u_id='$userID' ");
+                      $replyText["text"] = "LANG = THI แสดงข้อความภาษาไทย";
+              }else if($text== '3')
+              {
+                  $mysql->query("UPDATE `user_profiles` SET `lang` ='ENG'  WHERE u_id='$userID' ");
+                  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
+              }
+              else if ($text== 'CURRENT_Q') {
+                $isUsed='T';
+              }else if($text== 'OPTION')
+                      {
+                             $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";
+                      }
+                  else{
+                    //ตรวจสอบ BRANCH_CODE
+                    
+              $getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
+                $getNum = $getAcc->num_rows;
+                if ( $getNum == "0"){
+                         //ป้อน CODE ร้านไม่ถูกต้อง
+                  } else {
+                      while($row =  $getAcc->fetch_assoc()){
+                        $user_action = $row['action'];
+                      }
+                  }
+
+                  
+                            $replyText["text"]="ป้อนรหัสร้านไม่ถูกต้องกรุณาป้อนใหม่ค่ะ";
+                    $getBranch = $mysql->query("SELECT ID,name,accessToken,branch_code FROM  branch WHERE branch_code='$text'");
+                $getNum = $getBranch->num_rows;
+                if ( $getNum == "0"){
+                         //ป้อน CODE ร้านไม่ถูกต้อง
+                  } else {
+                      while($row =  $getBranch->fetch_assoc()){
+                        $branch_code = $row['branch_code'];
+                        $text=$user_action; //Set User Action ใหม่
+                        $isUsed='T';
+                      }
+                  }
+
+                  }
+          }else
+          {
+            $isUsed='T';
+          }
+
+        }else
+        {
+          //ADMIN
+          $isUsed='T';
+          //Get Branch_code
+          $getBranch = $mysql->query("SELECT branch_no FROM  user_profiles WHERE u_id='$userID'");
+                $getNum = $getBranch->num_rows;
+                if ( $getNum == "0"){
+                         //ป้อน CODE ร้านไม่ถูกต้อง
+                  } else {
+                      while($row =  $getBranch->fetch_assoc()){
+                        $branch_code = $row['branch_no'];
+                      }
+                  }
+        }
+
+
 
 ///////////////////////////////////////
     //$START_Q   1=เปิดรับ Q , 2 =PAUSE_Q ,3 = STOP_Q 
@@ -274,7 +364,7 @@ if($text== 'ADD_Q' && $permission=='user')
   {
   //ตรวจสอบต้องเป็น User ADD ใหม่ หรือ คิว Complete ไปแล้ว
   $addNewQ='F';
-    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code='$branch_code' AND u_id='$userID' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code')");
+    $getQno = $mysql->query("SELECT u_id,name FROM add_q where branch_code='$branch_code' AND u_id='$userID' and status='wait' AND q_no >(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code')");
   $getNum = $getQno->num_rows;
   if ( $getNum == "0"){
       $addNewQ='T';
@@ -337,6 +427,8 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
 
 
 }////////////// END ADD_Q
+
+
 
 }elseif (($text== 'CLEAR_Q') && $permission =='admin') {
   $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q` where branch_no=$branchNo");
@@ -519,10 +611,11 @@ $mysql->query("INSERT INTO `user_profiles`(`u_id`,`branch_no`,`displayName`,`pic
   }else if(($text== 'CANCEL_Q') && ($permission =='user'))
   {
     //ยกเลิกคิวที่มี status wait
-    $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id='$userID' AND branch_no=$branchNo and status ='wait'");
+    $mysql->query("UPDATE `heroku_9899d38b5c56894`.`add_q` SET `status` ='cancel'  WHERE u_id='$userID' AND branch_code=$branch_code and status ='wait'");
     $replyText["text"] = "ยกเลิกคิวเรียบร้อยแล้วค่ะ ขอบคุณที่ใช้บริการ";
   }//Else $text
 }///////// END  IF Isused
+}///////////END IF isRegister
 
   $lineData['URL'] = "https://api.line.me/v2/bot/message/reply";
   $lineData['AccessToken'] = $access_token;
