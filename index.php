@@ -372,7 +372,7 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       
                                   if(strlen($tel)<>10)
                                     {
-      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ $tel";
+      	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ $text";
                                     }else{
                                     	//// ADD_Q ลุกค้า โดย Admin
 
