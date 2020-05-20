@@ -198,9 +198,11 @@ $isUsed='T';
 ///
 
 ///SETUP ADMIN //////////////
+$IsAddAdmin='F';
 if ($admin_code==$text) {
      //Update permisstion
 	$mysql->query("UPDATE `user_profiles` SET `permission` ='admin'  WHERE u_id='$userID' ");
+	$IsAddAdmin='T';
     $replyText["text"] = "ระบบได้เพิ่มคุณเป็น Admin ร้านเรียบร้อยค่ะ";
 }
 ///// ADD PERMISSTION
@@ -486,6 +488,9 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
   }
 
 ///// END NEXT Q
+            	}else if($IsAddAdmin=='T')
+            	{
+            		///กรณี Add Admin ด้วย CODE Branch สำเร็จ
             	}
   		    else   {
   		    			$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
