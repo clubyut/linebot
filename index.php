@@ -13,13 +13,15 @@ $branchNo = '111';
   $errorcode = $mysql->connect_error;
   print("MySQL(Connection)> ".$errorcode);
   }
-  $getBranch = $mysql->query("SELECT ID,name,accessToken FROM  branch WHERE branch_code='$branchNo'");
+  $getBranch = $mysql->query("SELECT ID,name,accessToken,admin_code,branch_code FROM  branch WHERE branch_code='$branchNo'");
   $getNum = $getBranch->num_rows;
   if ( $getNum == "0"){
       $access_token='';
+      $admin_code='';
   } else {
     while($row =  $getBranch->fetch_assoc()){
       $access_token = $row['accessToken'];
+      $admin_code=$row['admin_code'];
     }
   }
 
@@ -194,6 +196,13 @@ function pushMsg($arrayHeader,$arrayPostData){
 $replyText["type"] = "text";
 $isUsed='T';
 ///
+
+///SETUP ADMIN //////////////
+if ($admin_code==$text) {
+     //Update permisstion
+	$mysql->query("UPDATE `user_profiles` SET `permission` ='admin'  WHERE u_id='$userID' ");
+    $replyText["text"] = "ระบบได้เพิ่มคุณเป็น Admin ร้านเรียบร้อยค่ะ";
+}
 ///// ADD PERMISSTION
 $isRegister='F';
 $cus_name='';
