@@ -356,7 +356,31 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
   		    {
   		    	$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
             			$replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
-  		    }else if($text== 'OPTION')
+  		    }else if($text== 'CALL_Q'){//CALL_Q
+
+
+		$getAcc= $mysql->query("
+select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code') and branch_code='$branch_code'");
+  							$getNum = $getAcc->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								$replyText["text"] = "ไม่มีคิว";
+  								} else {
+    									while($row =  $getAcc->fetch_assoc()){
+      										$CurrentQ = $row['q_no'];     										
+    	    $textMsg="ถึงคิวที่ $CurrentQ ของคุณแล้ว โปรดแสดงตัว";
+     		$id = $row['u_id'];
+         	$arrayPostData['to'] = $id;
+          	$arrayPostData['messages'][0]['type'] = "text";
+          	$arrayPostData['messages'][0]['text'] = $textMsg;
+          	//if($id<>$userID)
+          	//{
+          	pushMsg($arrayHeader,$arrayPostData);
+            //}
+    									}
+  								}
+  		    }
+  		    else if($text== 'OPTION')
   		    {
  
                  $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";           	        
@@ -374,7 +398,12 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
             	}else if($text== 'CURRENT_Q')
             	{
 
-
+   $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
 					$getAcc= $mysql->query("select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code'");
   							$getNum = $getAcc->num_rows;
   							if ( $getNum == "0"){
