@@ -373,16 +373,17 @@ select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from 
   								$replyText["text"] = "ไม่มีคิว";
   								} else {
     									while($row =  $getAcc->fetch_assoc()){
+    										$replyText["text"] = "เรียกคิวซ้ำเรียบร้อยค่ะ";
       									    $CurrentQ = $row['q_no'];
       									    $textMsg="ถึงคิวที่ $CurrentQ ของคุณแล้ว โปรดแสดงตัว";
      		$id = $row['u_id'];
          	$arrayPostData['to'] = $id;
           	$arrayPostData['messages'][0]['type'] = "text";
           	$arrayPostData['messages'][0]['text'] = $textMsg;
-          	//if($id<>$userID)
-          	//{
+          	if($id<>$userID)
+          	{
           	pushMsg($arrayHeader,$arrayPostData);
-            //}
+            }
     									}
   								}
   		    }
