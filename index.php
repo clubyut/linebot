@@ -587,7 +587,13 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
                                   if(strlen($tel)<>10)
                                     {
       	                                $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
-                                    }else{
+                                    }elseif ($START_Q==2) {
+ 	//PAUSE_Q
+ 	$replyText["text"] = "ขออภัย ร้านหยุดรับคิวชั่วคราว";
+ }elseif ($START_Q==3) {
+ 	//STOP_Q
+ 	$replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
+ } else{
                                     	//// ADD_Q ลุกค้า โดย Admin
                                     	  ////Get Branch Code
 
