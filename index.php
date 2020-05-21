@@ -211,7 +211,7 @@ $IsAddAdmin='F';
 
 if ($IsAddAdmin=='T') {
      //Update permisstion
-	$mysql->query("UPDATE `user_profiles` SET `permission` ='admin' ,`branch_code` ='$a_branch_code'   WHERE u_id='$userID' ");
+	$mysql->query("UPDATE `user_profiles` SET `permission` ='admin' ,`branch_no` ='$a_branch_code'   WHERE u_id='$userID' ");
     $replyText["text"] = "ระบบได้เพิ่มคุณเป็น Admin ร้านเรียบร้อยค่ะ";
 }
 ///// ADD PERMISSTION
