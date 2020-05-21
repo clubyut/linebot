@@ -578,7 +578,7 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
       									$user_action = $row['action'];
     									}
   								}
-  								if($user_action=='ADD_Q')
+  								if($user_action=='ADD_Q' && $START_Q=='1')
   								{
   									$arrTxt=explode(" ",  $text);
    								    $name=$arrTxt[0]; 
@@ -590,17 +590,6 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
                                     }else{
                                     	//// ADD_Q ลุกค้า โดย Admin
                                     	  ////Get Branch Code
-  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
-    $getNum = $getQno->num_rows;
-    if ( $getNum == "0"){
-
-           $START_Q=0;
-           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
-    } else {
-    while($row = $getQno->fetch_assoc()){
-      $START_Q=$row['START_Q'];
-    }
-  }
 
   if($START_Q==1)
   {
