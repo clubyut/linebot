@@ -418,13 +418,16 @@ select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from 
             		  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
             	}else if($text== '1' && $user_action=='CONTROL')
   		    {
-  		    	$replyText["text"] = "กรณีพิมพ์ 1 [เริ่มคิว]";
+  		    	$mysql->query("UPDATE `branch` SET `START_Q` ='1'  WHERE branch_code='$branch_code' ");
+  		    	$replyText["text"] = "[เริ่มคิว]";
   		    }else if($text== '2' && $user_action=='CONTROL')
             	{
-            		  $replyText["text"] = "กรณีพิมพ์ 2 [พักคิว]";
+            		  $mysql->query("UPDATE `branch` SET `START_Q` ='2'  WHERE branch_code='$branch_code' ");
+            		  $replyText["text"] = "[พักคิว]";
             	}else if($text== '3' && $user_action=='CONTROL')
             	{
-            		  $replyText["text"] = "กรณีพิมพ์ 3 [เคลียร์คิว]";
+            		  $mysql->query("UPDATE `branch` SET `START_Q` ='3'  WHERE branch_code='$branch_code' ");
+            		  $replyText["text"] = "[หยุดรับคิว]";
             	}else if($text== 'CURRENT_Q')
             	{
 
