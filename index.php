@@ -196,13 +196,22 @@ function pushMsg($arrayHeader,$arrayPostData){
 $replyText["type"] = "text";
 $isUsed='T';
 ///
-
-///SETUP ADMIN //////////////
 $IsAddAdmin='F';
-if ($admin_code==$text) {
+ $getBranch = $mysql->query("SELECT ID,name,accessToken,admin_code,branch_code FROM  branch WHERE admin_code='$text'");
+  $getNum = $getBranch->num_rows;
+  if ( $getNum == "0"){
+      
+  } else {
+    while($row =  $getBranch->fetch_assoc()){
+      $a_branch_code=$row['branch_code'];
+      $IsAddAdmin='T';
+    }
+  }
+///SETUP ADMIN //////////////
+
+if ($IsAddAdmin=='T') {
      //Update permisstion
-	$mysql->query("UPDATE `user_profiles` SET `permission` ='admin'  WHERE u_id='$userID' ");
-	$IsAddAdmin='T';
+	$mysql->query("UPDATE `user_profiles` SET `permission` ='admin' ,`branch_code` ='$a_branch_code'   WHERE u_id='$userID' ");
     $replyText["text"] = "ระบบได้เพิ่มคุณเป็น Admin ร้านเรียบร้อยค่ะ";
 }
 ///// ADD PERMISSTION
