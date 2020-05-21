@@ -398,7 +398,7 @@ select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from 
   		    }else if($text== 'CONTROL')
   		    {
   		    	//CONTROL
-  		    	$mysql->query("UPDATE `user_action` SET `action` ='OPTION'  WHERE u_id='$userID' ");
+  		    	$mysql->query("UPDATE `user_action` SET `action` ='CONTROL'  WHERE u_id='$userID' ");
   		    	$replyText["text"] = "กด 1 เริ่มคิว, กด 2 พักคิว, กด 3 เคลียร์คิว";    
   		    }
   		    else if($text== 'OPTION')
