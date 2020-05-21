@@ -358,6 +358,12 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
             			$replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
   		    }else if($text== 'CALL_Q'){//CALL_Q
 
+   $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
 
 		$getAcc= $mysql->query("
 select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code') and branch_code='$branch_code'");
@@ -367,8 +373,8 @@ select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from 
   								$replyText["text"] = "ไม่มีคิว";
   								} else {
     									while($row =  $getAcc->fetch_assoc()){
-      										$CurrentQ = $row['q_no'];     										
-    	    $textMsg="ถึงคิวที่ $CurrentQ ของคุณแล้ว โปรดแสดงตัว";
+      									    $CurrentQ = $row['q_no'];
+      									    $textMsg="ถึงคิวที่ $CurrentQ ของคุณแล้ว โปรดแสดงตัว";
      		$id = $row['u_id'];
          	$arrayPostData['to'] = $id;
           	$arrayPostData['messages'][0]['type'] = "text";
@@ -398,12 +404,6 @@ select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from 
             	}else if($text== 'CURRENT_Q')
             	{
 
-   $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
-   $content = file_get_contents('php://input');
-   $arrayJson = json_decode($content, true);
-   $arrayHeader = array();
-   $arrayHeader[] = "Content-Type: application/json";
-   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
 					$getAcc= $mysql->query("select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code'");
   							$getNum = $getAcc->num_rows;
   							if ( $getNum == "0"){
