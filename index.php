@@ -361,7 +361,18 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       									$user_action = $row['action'];
     									}
   								}
-  		    if($text== 'ADD_Q')
+  	$getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
+
+           $START_Q=0;
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
+  		    if($text== 'ADD_Q' && $START_Q=='1')
   		    {
   		    	$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
             			$replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
