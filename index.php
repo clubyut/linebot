@@ -352,6 +352,15 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
       									$branch_code = $row['branch_no'];
     									}
   								}
+  								$getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
+  							$getNum = $getAcc->num_rows;
+  							if ( $getNum == "0"){
+     						         //ป้อน CODE ร้านไม่ถูกต้อง
+  								} else {
+    									while($row =  $getAcc->fetch_assoc()){
+      									$user_action = $row['action'];
+    									}
+  								}
   		    if($text== 'ADD_Q')
   		    {
   		    	$mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
@@ -386,22 +395,36 @@ select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from 
             }
     									}
   								}
+  		    }else if($text== 'CONTROL')
+  		    {
+  		    	//CONTROL
+  		    	$mysql->query("UPDATE `user_action` SET `action` ='OPTION'  WHERE u_id='$userID' ");
+  		    	$replyText["text"] = "กด 1 เริ่มคิว, กด 2 พักคิว, กด 3 เคลียร์คิว";    
   		    }
   		    else if($text== 'OPTION')
   		    {
- 
+                 $mysql->query("UPDATE `user_action` SET `action` ='OPTION'  WHERE u_id='$userID' ");
                  $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";           	        
-  		    }else if($text== '1')
+  		    }else if($text== '1' && $user_action=='OPTION')
   		    {
   		    	//// ไม่ทำงาน
-  		    }else if($text== '2')
+  		    }else if($text== '2' && $user_action=='OPTION')
             	{
             		  $mysql->query("UPDATE `user_profiles` SET `lang` ='THI'  WHERE u_id='$userID' ");
                       $replyText["text"] = "LANG = THI แสดงข้อความภาษาไทย";
-            	}else if($text== '3')
+            	}else if($text== '3' && $user_action=='OPTION')
             	{
             		  $mysql->query("UPDATE `user_profiles` SET `lang` ='ENG'  WHERE u_id='$userID' ");
             		  $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
+            	}else if($text== '1' && $user_action=='CONTROL')
+  		    {
+  		    	$replyText["text"] = "กรณีพิมพ์ 1 [เริ่มคิว]";
+  		    }else if($text== '2' && $user_action=='CONTROL')
+            	{
+            		  $replyText["text"] = "กรณีพิมพ์ 2 [พักคิว]";
+            	}else if($text== '3' && $user_action=='CONTROL')
+            	{
+            		  $replyText["text"] = "กรณีพิมพ์ 3 [เคลียร์คิว]";
             	}else if($text== 'CURRENT_Q')
             	{
 
