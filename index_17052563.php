@@ -196,13 +196,22 @@ function pushMsg($arrayHeader,$arrayPostData){
 $replyText["type"] = "text";
 $isUsed='T';
 ///
-
-///SETUP ADMIN //////////////
 $IsAddAdmin='F';
-if ($admin_code==$text) {
+ $getBranch = $mysql->query("SELECT ID,name,accessToken,admin_code,branch_code FROM  branch WHERE admin_code='$text'");
+  $getNum = $getBranch->num_rows;
+  if ( $getNum == "0"){
+      
+  } else {
+    while($row =  $getBranch->fetch_assoc()){
+      $a_branch_code=$row['branch_code'];
+      $IsAddAdmin='T';
+    }
+  }
+///SETUP ADMIN //////////////
+
+if ($IsAddAdmin=='T') {
      //Update permisstion
-  $mysql->query("UPDATE `user_profiles` SET `permission` ='admin'  WHERE u_id='$userID' ");
-  $IsAddAdmin='T';
+  $mysql->query("UPDATE `user_profiles` SET `permission` ='admin' ,`branch_no` ='$a_branch_code'   WHERE u_id='$userID' ");
     $replyText["text"] = "ระบบได้เพิ่มคุณเป็น Admin ร้านเรียบร้อยค่ะ";
 }
 ///// ADD PERMISSTION
@@ -343,28 +352,95 @@ $mysql->query("INSERT INTO `user_action`(`u_id`,`action`)VALUES('$userID','$acti
                         $branch_code = $row['branch_no'];
                       }
                   }
-          if($text== 'ADD_Q')
+                  $getAcc= $mysql->query("SELECT action FROM user_action where u_id='$userID'");
+                $getNum = $getAcc->num_rows;
+                if ( $getNum == "0"){
+                         //ป้อน CODE ร้านไม่ถูกต้อง
+                  } else {
+                      while($row =  $getAcc->fetch_assoc()){
+                        $user_action = $row['action'];
+                      }
+                  }
+    $getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
+    $getNum = $getQno->num_rows;
+    if ( $getNum == "0"){
+
+           $START_Q=0;
+           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
+    } else {
+    while($row = $getQno->fetch_assoc()){
+      $START_Q=$row['START_Q'];
+    }
+  }
+          if($text== 'ADD_Q' && $START_Q=='1')
           {
             $mysql->query("UPDATE `user_action` SET `action` ='ADD_Q'  WHERE u_id='$userID' ");
                   $replyText["text"] = "กรุณากรอกชื่อ เว้นวรรค ตามด้วยเบอร์โทรลูกค้าด้วยค่ะ";
-          }else if($text== 'OPTION')
+          }else if($text== 'CALL_Q'){//CALL_Q
+
+   $accessToken = $access_token;//copy ข้อความ Channel access token ตอนที่ตั้งค่า
+   $content = file_get_contents('php://input');
+   $arrayJson = json_decode($content, true);
+   $arrayHeader = array();
+   $arrayHeader[] = "Content-Type: application/json";
+   $arrayHeader[] = "Authorization: Bearer {$accessToken}";
+
+    $getAcc= $mysql->query("
+select u_id,q_no from add_q where q_no=(select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code') and branch_code='$branch_code'");
+                $getNum = $getAcc->num_rows;
+                if ( $getNum == "0"){
+                         //ป้อน CODE ร้านไม่ถูกต้อง
+                  $replyText["text"] = "ไม่มีคิว";
+                  } else {
+                      while($row =  $getAcc->fetch_assoc()){
+                        $replyText["text"] = "เรียกคิวซ้ำเรียบร้อยค่ะ";
+                            $CurrentQ = $row['q_no'];
+                            $textMsg="ถึงคิวที่ $CurrentQ ของคุณแล้ว โปรดแสดงตัว";
+        $id = $row['u_id'];
+          $arrayPostData['to'] = $id;
+            $arrayPostData['messages'][0]['type'] = "text";
+            $arrayPostData['messages'][0]['text'] = $textMsg;
+            if($id<>$userID)
+            {
+            pushMsg($arrayHeader,$arrayPostData);
+            }
+                      }
+                  }
+          }else if($text== 'CONTROL')
           {
- 
+            //CONTROL
+            $mysql->query("UPDATE `user_action` SET `action` ='CONTROL'  WHERE u_id='$userID' ");
+            $replyText["text"] = "กด 1 เริ่มคิว, กด 2 พักคิว, กด 3 เคลียร์คิว";    
+          }
+          else if($text== 'OPTION')
+          {
+                 $mysql->query("UPDATE `user_action` SET `action` ='OPTION'  WHERE u_id='$userID' ");
                  $replyText["text"] = "กด 1 ยกเลิกคิว, กด 2 ภาษาไทย, กด 3 English";                     
-          }else if($text== '1')
+          }else if($text== '1' && $user_action=='OPTION')
           {
             //// ไม่ทำงาน
-          }else if($text== '2')
+          }else if($text== '2' && $user_action=='OPTION')
               {
                   $mysql->query("UPDATE `user_profiles` SET `lang` ='THI'  WHERE u_id='$userID' ");
                       $replyText["text"] = "LANG = THI แสดงข้อความภาษาไทย";
-              }else if($text== '3')
+              }else if($text== '3' && $user_action=='OPTION')
               {
                   $mysql->query("UPDATE `user_profiles` SET `lang` ='ENG'  WHERE u_id='$userID' ");
                   $replyText["text"] = "LANG = ENG แสดงข้อความภาษาอังกฤษ";
+              }else if($text== '1' && $user_action=='CONTROL')
+          {
+            $mysql->query("UPDATE `branch` SET `START_Q` ='1'  WHERE branch_code='$branch_code' ");
+            $replyText["text"] = "[เริ่มคิว]";
+          }else if($text== '2' && $user_action=='CONTROL')
+              {
+                  $mysql->query("UPDATE `branch` SET `START_Q` ='2'  WHERE branch_code='$branch_code' ");
+                  $replyText["text"] = "[พักคิว]";
+              }else if($text== '3' && $user_action=='CONTROL')
+              {
+                  $mysql->query("UPDATE `branch` SET `START_Q` ='3'  WHERE branch_code='$branch_code' ");
+                  $replyText["text"] = "[หยุดรับคิว]";
               }else if($text== 'CURRENT_Q')
               {
-
 
           $getAcc= $mysql->query("select IFNULL(max(q_no),0) AS q_no from add_q  where status='complete'  and branch_code='$branch_code'");
                 $getNum = $getAcc->num_rows;
@@ -502,7 +578,7 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
                         $user_action = $row['action'];
                       }
                   }
-                  if($user_action=='ADD_Q')
+                  if($user_action=='ADD_Q' && $START_Q=='1')
                   {
                     $arrTxt=explode(" ",  $text);
                       $name=$arrTxt[0]; 
@@ -514,17 +590,6 @@ $getMsg = $mysql->query("SELECT u_id,name,q_no,reply_token FROM add_q where stat
                                     }else{
                                       //// ADD_Q ลุกค้า โดย Admin
                                         ////Get Branch Code
-    $getQno = $mysql->query("select START_Q from branch where branch_code='$branch_code'");
-    $getNum = $getQno->num_rows;
-    if ( $getNum == "0"){
-
-           $START_Q=0;
-           //$replyText["text"] = "ไม่พบ branch_code ไม่สามารถระบุร้านได้";
-    } else {
-    while($row = $getQno->fetch_assoc()){
-      $START_Q=$row['START_Q'];
-    }
-  }
 
   if($START_Q==1)
   {
@@ -563,7 +628,13 @@ $mysql->query("DELETE FROM `heroku_9899d38b5c56894`.`add_q`  WHERE u_id=''");
   $replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
  } ////END $START_Q
                                     }
-                  } //// END IF ADD_Q
+                  }else if ($START_Q==2) {
+  //PAUSE_Q
+  $replyText["text"] = "ขออภัย ร้านหยุดรับคิวชั่วคราว";
+ }else if ($START_Q==3) {
+  //STOP_Q
+  $replyText["text"] = "ขออภัย ร้านยังไม่เปิดรับคิวในเวลานี้";
+ } /// //// END IF ADD_Q
 
               }
 
